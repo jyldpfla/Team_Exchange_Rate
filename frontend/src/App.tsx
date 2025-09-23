@@ -1,0 +1,63 @@
+import './App.scss'
+import { Route, Routes, useLocation } from 'react-router-dom'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import { useEffect, useRef } from 'react'
+
+import Nav from './components/Nav'
+import Main from './pages/Main'
+import DashboardPage from './pages/Dashboard'
+import ScrollRouter from './layout/ScrollRouter'
+import './styles/route-slide.css'
+import ScrollToTop from './components/ScrollToTop'
+import DataBoardPage from './pages/DataBoard'
+import InsightBoardPage from './pages/InsightBoard'
+import VisualizationBoardPage from './pages/VisualizationBoard'
+import VisualizationDetailPage from './pages/VisualDetail'
+import { getHealth } from './api/health'
+
+function App() {
+  const location = useLocation();
+  const nodeRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    getHealth()
+      .then((d) => console.log(`Server is connected. ${d.status} ${d.data}`))
+      .catch(() => console.log("error"))
+  })
+
+  const hideNav = location.pathname === '/';
+
+  return (
+    <div className="app">
+      {!hideNav && <Nav />}
+
+      <div className="content">
+        <ScrollRouter>
+          <ScrollToTop />
+          <TransitionGroup component={null}>
+            <CSSTransition
+              key={location.pathname}
+              classNames="slide"
+              timeout={500}          
+              nodeRef={nodeRef}    
+              unmountOnExit         
+            >
+              <div ref={nodeRef} className="route-wrapper">
+                <Routes location={location}>
+                  <Route path="/" element={<Main />} />
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/databoard" element={<DataBoardPage />} />
+                  <Route path="/visualizationboard" element={<VisualizationBoardPage />} />
+                  <Route path="/visualizationboard/S&P500" element={<VisualizationDetailPage />} />
+                  <Route path="/insightsboard" element={<InsightBoardPage />} />
+                </Routes>
+              </div>
+            </CSSTransition>
+          </TransitionGroup>
+        </ScrollRouter>
+      </div>
+    </div>
+  )
+}
+
+export default App
