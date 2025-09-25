@@ -3,7 +3,6 @@ import dataStyles from "../styles/DataBoard.module.scss";
 import Header from "../layout/Header";
 import CommodityTableCard from "../components/CommodityTableCard";
 import { rows } from "../constants/sampleDatas";
-import ChartCarousel from "../layout/ChartCarousel";
 import { GRAPH_OPTIONS } from "../constants/options";
 
 interface Props {

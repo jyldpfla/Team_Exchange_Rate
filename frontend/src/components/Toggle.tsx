@@ -1,5 +1,5 @@
 // src/components/Toggle.tsx
-import React, { forwardRef, useState, useId } from "react";
+import { forwardRef, useState, useId } from "react";
 import styles from "../styles/Toggle.module.scss";
 
 interface ToggleProps {

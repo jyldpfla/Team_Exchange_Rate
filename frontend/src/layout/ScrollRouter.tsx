@@ -3,7 +3,6 @@ import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const ROUTE_ORDER = ["/", "/dashboard"] as const;
-type RoutePath = (typeof ROUTE_ORDER)[number];
 
 const SCROLL_THRESHOLD = 30;   // 휠 감도
 const COOLDOWN_MS = 800;       // 연속 이동 방지(디바운스)

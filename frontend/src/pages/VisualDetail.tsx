@@ -5,7 +5,6 @@ import Select from "../components/Select";
 import { DATAS, GRAPH_OPTIONS } from "../constants/options";
 import ChartCarousel from "../layout/ChartCarousel";
 import { useState } from "react";
-import CurrencyCalculator from "../components/CurrencyCalc";
 
 interface Props {
     className?: string;

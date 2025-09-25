@@ -13,7 +13,7 @@ import DataBoardPage from './pages/DataBoard'
 import InsightBoardPage from './pages/InsightBoard'
 import VisualizationBoardPage from './pages/VisualizationBoard'
 import VisualizationDetailPage from './pages/VisualDetail'
-import { getHealth } from './api/health'
+import { connectMDb, connectPDb, getHealth } from './api/health'
 
 function App() {
   const location = useLocation();
@@ -23,6 +23,12 @@ function App() {
     getHealth()
       .then((d) => console.log(`Server is connected. ${d.status} ${d.data}`))
       .catch(() => console.log("error"))
+    connectPDb()
+      .then((d) => console.log(`Postgresql is connected. ${d.status}`))
+      .catch((e) => console.log(`error ${e}`))
+    connectMDb()
+      .then((d) => console.log(`MongoDB is connected. ${d.status}`))
+      .catch((e) => console.log(`error ${e}`))
   })
 
   const hideNav = location.pathname === '/';

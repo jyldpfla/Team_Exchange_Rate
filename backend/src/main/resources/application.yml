@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  # --- PostgreSQL (JPA) ---
+  datasource:
+    url: jdbc:postgresql://64.110.115.12:5432/exchange
+    username: exchange_admin
+    password: exchange_password
+  jpa:
+    hibernate:
+      ddl-auto: update # 운영은 validate 권장
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+    show-sql: true
+
+  # --- MongoDB Atlas ---
+  data:
+    mongodb:
+      uri: mongodb+srv://stradivirus:1q2w3e4r6218@cluster0.e7rvfpz.mongodb.net/exchange_all?retryWrites=true&w=majority&appName=Cluster0
+
+# (선택) 프로필 분리시
+# spring:
+#   profiles:
+#     active: local

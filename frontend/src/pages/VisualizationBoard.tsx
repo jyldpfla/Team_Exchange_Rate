@@ -3,7 +3,7 @@ import visStyles from "../styles/Visualization.module.scss";
 import Header from "../layout/Header";
 import ToggleGroup from "../layout/ToggleGroup";
 import Select from "../components/Select";
-import { DATAS, GRAPH_OPTIONS } from "../constants/options";
+import { GRAPH_OPTIONS } from "../constants/options";
 import ChartCarousel from "../layout/ChartCarousel";
 import { useState } from "react";
 
@@ -20,11 +20,6 @@ export default function VisualizationBoardPage(props: Props) {
         return GRAPH_OPTIONS.findIndex(opt => opt.value === selectedOption);
     };
 
-    const getCurrentGraphLabel = () => {
-        const currentOption = GRAPH_OPTIONS.find(opt => opt.value === selectedOption);
-        return currentOption ? currentOption.label : GRAPH_OPTIONS[0].label;
-    };
-
     const handleSelectChange = (value: string) => {
         setSelectedOption(value);
         setIsPaused(true);
@@ -33,13 +28,6 @@ export default function VisualizationBoardPage(props: Props) {
         setTimeout(() => {
             setIsPaused(false);
         }, 10000);
-    };
-
-    const handleDetailView = () => {
-        const currentLabel = getCurrentGraphLabel();
-        // 여기에 상세보기 로직 구현
-        console.log(`${currentLabel} 상세보기 클릭됨`);
-        // 예: 모달 열기, 새 페이지 이동 등
     };
 
     return (
