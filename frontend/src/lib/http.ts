@@ -9,10 +9,8 @@ export const http = axios.create({
 http.interceptors.response.use(
   (res) => res,
   (err) => {
-    // 공통 에러 처리 (토큰 만료 등)
-    if (err.response?.status === 401) {
-      // 예: 로그인 페이지로 이동
-      // window.location.href = '/login'
+    if (err.response?.status === 400) {
+      console.log("Request Error")
     }
     return Promise.reject(err)
   }
