@@ -1,4 +1,3 @@
-// src/features/exchange/exchange.types.ts
 export interface ExchangeRate {
     date: string;    
     usd: number;

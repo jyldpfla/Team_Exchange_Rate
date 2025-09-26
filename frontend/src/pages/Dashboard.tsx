@@ -4,8 +4,10 @@ import ToggleGroup from "../layout/ToggleGroup";
 import Select from "../components/Select";
 import { DATAS, GRAPH_OPTIONS } from "../constants/options";
 import ChartCarousel from "../layout/ChartCarousel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CurrencyCalculator from "../components/CurrencyCalc";
+import { getExchange } from "../api/data";
+import type { ExchangeRate } from "../features/exchange.types";
 
 interface Props {
     className?: string;
@@ -16,6 +18,13 @@ export default function DashboardPage(props: Props) {
     const [selectedOption, setSelectedOption] = useState(GRAPH_OPTIONS[0].value);
     const [isPaused, setIsPaused] = useState(false);
     const [activeTab, setActiveTab] = useState<string>('STK');
+    const [currentExchange, setCurrentExchange] = useState<ExchangeRate>();
+
+    useEffect(() => {
+        getExchange()
+            .then((d) => setCurrentExchange(d.data))
+            .catch((e) => console.log(`error ${e}`))
+    }, [currentExchange])
 
     const getSelectedIndex = () => {
         return GRAPH_OPTIONS.findIndex(opt => opt.value === selectedOption);
