@@ -1,4 +1,4 @@
-import type { Row } from "../components/CommodityTableCard";
+import type { Row, TableColumn } from "../components/CommodityTableCard";
 
 export const rows: Row[] = [
   { name:"옥수수", month:"25-12", unit:"센트/부셀", price:417.00, diff:-2.75, rate:-0.66, baseDate:"2025.09.10", exchange:"CBOT" },
@@ -13,3 +13,21 @@ export const rows: Row[] = [
   { name:"커피",   month:"25-12", unit:"센트/파운드", price:386.90, diff:5.10, rate:1.34, baseDate:"2025.09.10", exchange:"ICE" },
   { name:"코코아", month:"25-12", unit:"달러/톤", price:7468.00, diff:73.00, rate:0.99, baseDate:"2025.09.10", exchange:"ICE" },
 ];
+
+// interface CustomData {
+//   id: number;
+//   title: string;
+//   status: 'active' | 'inactive';
+//   amount: number;
+//   date: string;
+// }
+
+// export const customColumns: TableColumn<CustomData>[] = [
+//   { key: 'id', header: 'ID', className: 'num' },
+//   { key: 'title', header: '제목' },
+//   { key: 'date', header: '날짜', className: 'date' }
+// ];
+
+// export const customData: CustomData[] = [
+//   { id: 1, title: '항목1', status: 'active', amount: 10000, date: '2024-09-29' }
+// ];

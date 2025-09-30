@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;   // ← RestController, GetMapping 등 여기서 옴
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.bson.Document;
 
@@ -14,8 +15,11 @@ import java.util.*;
 @RequiredArgsConstructor
 public class DbInspectController {
 
-    private final JdbcTemplate jdbcTemplate;   // PostgreSQL
-    private final MongoTemplate mongoTemplate; // MongoDB
+	 @Autowired
+	    private JdbcTemplate jdbcTemplate;
+	    
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     // PostgreSQL 테이블 목록
     @GetMapping("/pg/tables")

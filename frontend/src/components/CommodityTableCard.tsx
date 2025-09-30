@@ -1,28 +1,103 @@
 import React from "react";
 import "../styles/CommodityTableCard.scss";
 
+// 기존 Row 타입 유지 (하위 호환성)
 export type Row = {
-  name: string;        // 상품명
-  month: string;       // 월물 (예: '25-12')
-  unit: string;        // 단위 (예: '센트/파운드')
-  price: number;       // 현재가
-  diff: number;        // 전일비 (절대값, +상승 / -하락 / 0보합)
-  rate: number;        // 등락률 (예: 0.57 => 0.57%)
-  baseDate: string;    // 기준일 (YYYY.MM.DD)
-  exchange: string;    // 거래소 (CBOT/ICE 등)
+  name: string;        
+  month: string;       
+  unit: string;        
+  price: number;       
+  diff: number;        
+  rate: number;        
+  baseDate: string;    
+  exchange: string;    
 };
 
-interface Props {
+// 새로운 제네릭 컬럼 정의
+export interface TableColumn<T = any> {
+  key: keyof T | string;
+  header: string;
+  className?: string;
+  render?: (value: any, row: T, index: number) => React.ReactNode;
+  align?: 'left' | 'center' | 'right';
+}
+
+// Props 인터페이스 - 기존 방식과 새로운 방식 모두 지원
+interface Props<T = Row> {
   title?: string;
-  rows: Row[];
+  rows: T[];
+  columns?: TableColumn<T>[];
+  // 하위 호환성을 위한 기존 속성들
+  className?: string;
 }
 
 const nf = new Intl.NumberFormat("en-US");
 const pf = (v: number) => `${(v >= 0 ? "+" : "")}${v.toFixed(2)}%`;
 
-const CommodityTableCard: React.FC<Props> = ({ title = "원자재 시세", rows }) => {
+// 기본 컬럼 설정 (기존 원자재 테이블과 동일)
+const defaultColumns: TableColumn<Row>[] = [
+  { key: 'name', header: '상품명', render: (value) => <span className="name">{value}</span> },
+  { key: 'month', header: '월물', render: (value) => <span className="badge">{value}</span> },
+  { key: 'unit', header: '단위', className: 'unit' },
+  { key: 'price', header: '현재가', className: 'num', render: (value) => nf.format(value) },
+  { 
+    key: 'diff', 
+    header: '전일비', 
+    className: 'num', 
+    render: (value, row) => {
+      const dir = value > 0 ? "up" : value < 0 ? "down" : "flat";
+      return (
+        <span className={`delta ${dir}`} aria-label={`전일비 ${value}`}>
+          <i aria-hidden="true" />
+          <span>{nf.format(Math.abs(value))}</span>
+        </span>
+      );
+    }
+  },
+  { 
+    key: 'rate', 
+    header: '등락률', 
+    className: 'num', 
+    render: (value, row) => {
+      const dir = row.diff > 0 ? "up" : row.diff < 0 ? "down" : "flat";
+      return (
+        <span className={`rate ${dir}`} aria-label={`등락률 ${pf(value)}`}>
+          <i aria-hidden="true" />
+          <span>{pf(Math.abs(value))}</span>
+        </span>
+      );
+    }
+  },
+  { key: 'baseDate', header: '기준일', className: 'date' },
+  { key: 'exchange', header: '거래소', className: 'ex' }
+];
+
+const CommodityTableCard = <T extends Record<string, any> = Row>({ 
+  title = "테이블", 
+  rows, 
+  columns = defaultColumns as TableColumn[],
+  className = ""
+}: Props<T>) => {
+  
+  const renderCellContent = (column: TableColumn<T>, row: T, index: number) => {
+    const value = typeof column.key === 'string' ? row[column.key] : row[column.key as keyof T];
+    
+    if (column.render) {
+      return column.render(value, row, index);
+    }
+    
+    return value;
+  };
+
+  const getCellClassName = (column: TableColumn<T>) => {
+    const classes = [];
+    if (column.className) classes.push(column.className);
+    if (column.align) classes.push(column.align);
+    return classes.join(' ');
+  };
+
   return (
-    <div className="card commodityTableCard" role="region" aria-label={title}>
+    <div className={`card commodityTableCard ${className}`} role="region" aria-label={title}>
       <div className="cardHeader">
         <h3>{title}</h3>
       </div>
@@ -31,50 +106,29 @@ const CommodityTableCard: React.FC<Props> = ({ title = "원자재 시세", rows 
         <table className="cTable">
           <thead>
             <tr>
-              <th>상품명</th>
-              <th>월물</th>
-              <th>단위</th>
-              <th className="num">현재가</th>
-              <th className="num">전일비</th>
-              <th className="num">등락률</th>
-              <th>기준일</th>
-              <th>거래소</th>
+              {columns.map((column, index) => (
+                <th key={index} className={getCellClassName(column)}>
+                  {column.header}
+                </th>
+              ))}
             </tr>
           </thead>
 
           <tbody>
             {rows.length === 0 ? (
               <tr>
-                <td className="empty" colSpan={8}>데이터가 없습니다</td>
+                <td className="empty" colSpan={columns.length}>데이터가 없습니다</td>
               </tr>
             ) : (
-              rows.map((r, i) => {
-                const dir = r.diff > 0 ? "up" : r.diff < 0 ? "down" : "flat";
-                return (
-                  <tr key={i}>
-                    <td className="name">{r.name}</td>
-                    <td>
-                      <span className="badge">{r.month}</span>
+              rows.map((row, rowIndex) => (
+                <tr key={rowIndex}>
+                  {columns.map((column, colIndex) => (
+                    <td key={colIndex} className={getCellClassName(column)}>
+                      {renderCellContent(column, row, rowIndex)}
                     </td>
-                    <td className="unit">{r.unit}</td>
-
-                    <td className="num">{nf.format(r.price)}</td>
-
-                    <td className={`num delta ${dir}`} aria-label={`전일비 ${r.diff}`}>
-                      <i aria-hidden="true" />
-                      <span>{nf.format(Math.abs(r.diff))}</span>
-                    </td>
-
-                    <td className={`num rate ${dir}`} aria-label={`등락률 ${pf(r.rate)}`}>
-                      <i aria-hidden="true" />
-                      <span>{pf(Math.abs(r.rate))}</span>
-                    </td>
-
-                    <td className="date">{r.baseDate}</td>
-                    <td className="ex">{r.exchange}</td>
-                  </tr>
-                );
-              })
+                  ))}
+                </tr>
+              ))
             )}
           </tbody>
         </table>

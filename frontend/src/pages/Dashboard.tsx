@@ -2,12 +2,13 @@ import styles from "../styles/Dashboard.module.scss";
 import Header from "../layout/Header";
 import ToggleGroup from "../layout/ToggleGroup";
 import Select from "../components/Select";
-import { DATAS, GRAPH_OPTIONS } from "../constants/options";
+import { CURRENCY_OPTIONS } from "../constants/options";
 import ChartCarousel from "../layout/ChartCarousel";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CurrencyCalculator from "../components/CurrencyCalc";
-import { getExchange } from "../api/data";
-import type { ExchangeRate } from "../features/exchange.types";
+import CommodityTableCard from "../components/CommodityTableCard";
+import { useAppDispatch, useAppSelector } from "../app/hook";
+import { loadLatestExchange, selectExchangeLoading, selectLatestExchange } from "../features/exchange.slice"
 
 interface Props {
     className?: string;
@@ -15,19 +16,20 @@ interface Props {
 
 export default function DashboardPage(props: Props) {
     const { className } = props;
-    const [selectedOption, setSelectedOption] = useState(GRAPH_OPTIONS[0].value);
+    const [selectedOption, setSelectedOption] = useState(CURRENCY_OPTIONS[0].value);
     const [isPaused, setIsPaused] = useState(false);
-    const [activeTab, setActiveTab] = useState<string>('STK');
-    const [currentExchange, setCurrentExchange] = useState<ExchangeRate>();
+    const dispatch = useAppDispatch();
+    const latest = useAppSelector(selectLatestExchange);
+    const loading = useAppSelector(selectExchangeLoading);
 
     useEffect(() => {
-        getExchange()
-            .then((d) => setCurrentExchange(d.data))
-            .catch((e) => console.log(`error ${e}`))
-    }, [currentExchange])
+        console.log(latest)
+        dispatch(loadLatestExchange())
+    }, [dispatch]);
+
 
     const getSelectedIndex = () => {
-        return GRAPH_OPTIONS.findIndex(opt => opt.value === selectedOption);
+        return CURRENCY_OPTIONS.findIndex(opt => opt.value === selectedOption);
     };
 
     const handleSelectChange = (value: string) => {
@@ -40,12 +42,24 @@ export default function DashboardPage(props: Props) {
         }, 10000);
     };
 
+    const headers = [{ key: "currency", header: "통화" }, { key: "exchange_rate", header: "현재 환율", className: "num" }];
+    const rows = useMemo(() => {
+        if (!latest) return [];
+        return [
+            { currency: "CNY", exchange_rate: latest.cny },
+            { currency: "EUR", exchange_rate: latest.eur },
+            { currency: "JPY", exchange_rate: latest.jpy },
+            { currency: "USD", exchange_rate: latest.usd },
+        ];
+    }, [latest]);
+
     return (
         <div className={`${styles.page} ${className}`}>
 
             <Header />
 
             {/* 본문 컨텐츠 두 컬럼 */}
+            <p>{loading}</p>
             <main className={styles.content}>
                 <section className={styles.left}>
                     {/* 좌측: 차트/통계 영역 */}
@@ -53,7 +67,7 @@ export default function DashboardPage(props: Props) {
                         <div className={styles.cardHeader}>
                             <h2>Statistics</h2>
                             <Select
-                                options={GRAPH_OPTIONS}
+                                options={CURRENCY_OPTIONS}
                                 value={selectedOption}
                                 onChange={handleSelectChange}
                             />
@@ -65,7 +79,7 @@ export default function DashboardPage(props: Props) {
                         {/* 차트 영역(placeholder) */}
                         <div className={styles.chartArea}>
                             <ChartCarousel key={isPaused ? selectedOption : 'auto'} intervalMs={isPaused ? 0 : 3000} initialIndex={isPaused ? getSelectedIndex() : 0}>
-                                {GRAPH_OPTIONS.map((option, index) => (
+                                {CURRENCY_OPTIONS.map((option, index) => (
                                     <div key={index} className={styles.fakeChart}>
                                         {option.label}
                                     </div>
@@ -87,26 +101,11 @@ export default function DashboardPage(props: Props) {
                         </div>
 
                         <div className={styles.cardBody}>
-                            <div className={styles.folderTabs}>
-                                {Object.keys(DATAS).map(tab => (
-                                    <button
-                                        key={tab}
-                                        className={activeTab === tab ? styles.folderTabActive : styles.folderTab}
-                                        onClick={() => setActiveTab(tab)}
-                                    >
-                                        {tab}
-                                    </button>
-                                ))}
-                            </div>
-
-                            <div className={styles.tabContent}>
-                                <ul className={styles.list}>
-                                    {DATAS[activeTab]?.map((item, index) => (
-                                        <li key={index}>{item}</li>
-                                    ))}
-                                </ul>
-                            </div>
-
+                            <CommodityTableCard
+                                title="환율 정보"
+                                rows={rows}
+                                columns={headers}
+                            />
                         </div>
                     </div>
                 </aside>

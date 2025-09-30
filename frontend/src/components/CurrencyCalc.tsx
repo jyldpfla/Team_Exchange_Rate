@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../styles/CurrencyCalculator.module.scss';
+import { useAppSelector } from '../app/hook';
+import { selectLatestExchange } from '../features/exchange.slice';
 
 interface Currency {
   code: string;
@@ -13,19 +15,19 @@ const currencies: Currency[] = [
   { code: 'JPY', flag: '🇯🇵' }
 ];
 
-// 샘플 환율 데이터
-const exchangeRates: Record<string, Record<string, number>> = {
-  'USD': { 'KRW': 1340, 'EUR': 0.92, 'JPY': 149 },
-  'KRW': { 'USD': 0.000746, 'EUR': 0.000687, 'JPY': 0.111 },
-  'EUR': { 'USD': 1.09, 'KRW': 1456, 'JPY': 162 },
-  'JPY': { 'USD': 0.0067, 'KRW': 9.0, 'EUR': 0.0062 }
-};
-
 const CurrencyCalculator: React.FC = () => {
+  const latest = useAppSelector(selectLatestExchange);
+  const [exchangeRates, setExchangeRates] = useState<Record<string, Record<string, number>> | null>(null) // 샘플 환율 데이터
   const [fromCurrency, setFromCurrency] = useState<string>('USD');
   const [toCurrency, setToCurrency] = useState<string>('KRW');
-  const [fromAmount, setFromAmount] = useState<string>('1');
-  const [toAmount, setToAmount] = useState<string>('1,340');
+  const [fromAmount, setFromAmount] = useState<string | null>(null);
+  const [toAmount, setToAmount] = useState<string | null>(null);
+
+  useEffect(() => {
+    setExchangeRates(latest);
+    setFromAmount(latest.usd);
+    setToAmount(latest.krw)
+  }, [setExchangeRates])
 
   const getCurrencyByCode = (code: string): Currency | undefined => {
     return currencies.find(c => c.code === code);
@@ -69,11 +71,11 @@ const CurrencyCalculator: React.FC = () => {
               </option>
             ))}
           </select>
-          
+
           <div className={styles.flag}>
             {getCurrencyByCode(fromCurrency)?.flag}
           </div>
-          
+
           <div className={`${styles.arrow} ${styles.arrowPrimary}`}>
             ▼
           </div>
@@ -101,11 +103,11 @@ const CurrencyCalculator: React.FC = () => {
               </option>
             ))}
           </select>
-          
+
           <div className={styles.flag}>
             {getCurrencyByCode(toCurrency)?.flag}
           </div>
-          
+
           <div className={`${styles.arrow} ${styles.arrowSecondary}`}>
             ▼
           </div>

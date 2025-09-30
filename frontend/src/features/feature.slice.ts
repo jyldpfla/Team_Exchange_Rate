@@ -4,17 +4,18 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../app/store";
 import { getExchange } from "../api/data";
 import type { ExchangeRate } from "./exchange.types";
+import { loadLatestExchange } from "./exchange.slice";
 
-export const loadLatestExchange = createAsyncThunk<
+export const loadLatesFeatures = createAsyncThunk<
     any,          // 성공했을 때 payload 타입
     void,         // 인자가 필요 없음
     { rejectValue: string }
->("exchange/loadLatest", async (_, { rejectWithValue }) => {
+>("exchange/loadFeature", async (_, { rejectWithValue }) => {
     try {
         const data = await getExchange()
         return data
     } catch (e: any) {
-        return rejectWithValue(e?.message ?? "Failed to fetch latest exchange")
+        return rejectWithValue(e?.message ?? "Failed to fetch Features")
     }
 })
 

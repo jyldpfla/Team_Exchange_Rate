@@ -25,7 +25,7 @@ export default function DataBoardPage(props: Props) {
                         <div className={styles.cardHeader}>
                             <h2>Datas</h2>
                         </div>
-                        <CommodityTableCard rows={rows} />
+                        <CommodityTableCard rows={rows} columns={[]} />
                     </div>
                 </section>
                 <aside className={styles.right}>
