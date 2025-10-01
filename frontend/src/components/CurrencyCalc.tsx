@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from '../styles/CurrencyCalculator.module.scss';
 import { useAppSelector } from '../app/hook';
 import { selectLatestExchange } from '../features/exchange.slice';
@@ -17,43 +17,68 @@ const currencies: Currency[] = [
 
 const CurrencyCalculator: React.FC = () => {
   const latest = useAppSelector(selectLatestExchange);
-  const [exchangeRates, setExchangeRates] = useState<Record<string, Record<string, number>> | null>(null) // 샘플 환율 데이터
   const [fromCurrency, setFromCurrency] = useState<string>('USD');
   const [toCurrency, setToCurrency] = useState<string>('KRW');
-  const [fromAmount, setFromAmount] = useState<string | null>(null);
-  const [toAmount, setToAmount] = useState<string | null>(null);
+  const [fromAmount, setFromAmount] = useState<string>('1');
 
-  useEffect(() => {
-    setExchangeRates(latest);
-    setFromAmount(latest.usd);
-    setToAmount(latest.krw)
-  }, [setExchangeRates])
+  // latest 데이터로 환율 맵 생성
+  const exchangeRates = useMemo(() => {
+    if (!latest) return {};
+    
+    // 각 통화의 KRW 대비 환율 (1 외화 = X KRW)
+    const rates: Record<string, number> = {
+      USD: latest.usd || 1,
+      EUR: latest.eur || 1,
+      JPY: latest.jpy || 1,
+      KRW: 1
+    };
+
+    // 통화 간 교차 환율 계산
+    const crossRates: Record<string, Record<string, number>> = {};
+    
+    Object.keys(rates).forEach(from => {
+      crossRates[from] = {};
+      Object.keys(rates).forEach(to => {
+        if (from === to) {
+          crossRates[from][to] = 1;
+        } else if (from === 'KRW') {
+          // KRW → 다른 통화: 1 / 해당 통화의 KRW 환율
+          crossRates[from][to] = 1 / rates[to];
+        } else if (to === 'KRW') {
+          // 다른 통화 → KRW: 해당 통화의 KRW 환율
+          crossRates[from][to] = rates[from];
+        } else {
+          // 다른 통화 간 교차 환율
+          crossRates[from][to] = rates[from] / rates[to];
+        }
+      });
+    });
+
+    return crossRates;
+  }, [latest]);
 
   const getCurrencyByCode = (code: string): Currency | undefined => {
     return currencies.find(c => c.code === code);
   };
 
-  // 환율 계산 함수
-  const calculateExchange = (): void => {
+  // 환율 계산 - useMemo로 자동 계산
+  const toAmount = useMemo(() => {
     if (!fromAmount || isNaN(Number(fromAmount))) {
-      setToAmount('0');
-      return;
+      return '0';
     }
 
     if (fromCurrency === toCurrency) {
-      setToAmount(parseFloat(fromAmount).toLocaleString());
-      return;
+      return parseFloat(fromAmount).toLocaleString();
     }
 
     const rate = exchangeRates[fromCurrency]?.[toCurrency] || 1;
     const convertedAmount = parseFloat(fromAmount) * rate;
-    setToAmount(convertedAmount.toLocaleString());
-  };
-
-  // 금액이나 통화가 변경될 때마다 자동 계산
-  useEffect(() => {
-    calculateExchange();
-  }, [fromAmount, fromCurrency, toCurrency]);
+    
+    return convertedAmount.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }, [fromAmount, fromCurrency, toCurrency, exchangeRates]);
 
   return (
     <div className={styles.calculator}>
@@ -71,11 +96,11 @@ const CurrencyCalculator: React.FC = () => {
               </option>
             ))}
           </select>
-
+          
           <div className={styles.flag}>
             {getCurrencyByCode(fromCurrency)?.flag}
           </div>
-
+          
           <div className={`${styles.arrow} ${styles.arrowPrimary}`}>
             ▼
           </div>
@@ -103,11 +128,11 @@ const CurrencyCalculator: React.FC = () => {
               </option>
             ))}
           </select>
-
+          
           <div className={styles.flag}>
             {getCurrencyByCode(toCurrency)?.flag}
           </div>
-
+          
           <div className={`${styles.arrow} ${styles.arrowSecondary}`}>
             ▼
           </div>

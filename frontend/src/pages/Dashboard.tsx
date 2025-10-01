@@ -4,11 +4,11 @@ import ToggleGroup from "../layout/ToggleGroup";
 import Select from "../components/Select";
 import { CURRENCY_OPTIONS } from "../constants/options";
 import ChartCarousel from "../layout/ChartCarousel";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import CurrencyCalculator from "../components/CurrencyCalc";
 import CommodityTableCard from "../components/CommodityTableCard";
-import { useAppDispatch, useAppSelector } from "../app/hook";
-import { loadLatestExchange, selectExchangeLoading, selectLatestExchange } from "../features/exchange.slice"
+import { useAppSelector } from "../app/hook";
+import { selectExchangeLoading, selectLatestExchange } from "../features/exchange.slice"
 
 interface Props {
     className?: string;
@@ -18,14 +18,8 @@ export default function DashboardPage(props: Props) {
     const { className } = props;
     const [selectedOption, setSelectedOption] = useState(CURRENCY_OPTIONS[0].value);
     const [isPaused, setIsPaused] = useState(false);
-    const dispatch = useAppDispatch();
     const latest = useAppSelector(selectLatestExchange);
     const loading = useAppSelector(selectExchangeLoading);
-
-    useEffect(() => {
-        console.log(latest)
-        dispatch(loadLatestExchange())
-    }, [dispatch]);
 
 
     const getSelectedIndex = () => {

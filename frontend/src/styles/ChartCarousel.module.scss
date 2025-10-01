@@ -9,7 +9,7 @@
 .viewport {
     position: relative;
     margin-top: 10px;
-    height: 280px;
+    min-height: 20px;
     overflow: hidden;
     border-radius: 10px;
     background: linear-gradient(180deg, #f9f9ff, #f1f2ff);

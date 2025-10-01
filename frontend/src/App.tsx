@@ -15,10 +15,16 @@ import VisualizationBoardPage from './pages/VisualizationBoard'
 import VisualizationDetailPage from './pages/VisualDetail'
 import { connectMDb, connectPDb, getHealth } from './api/health'
 import { getExchange } from './api/data'
+import { useAppDispatch } from './app/hook'
+import { loadLatestExchange } from './features/exchange.slice'
 
 function App() {
   const location = useLocation();
   const nodeRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(loadLatestExchange())
+  }, [dispatch]);
 
   useEffect(() => {
     getHealth()
@@ -45,9 +51,9 @@ function App() {
             <CSSTransition
               key={location.pathname}
               classNames="slide"
-              timeout={500}          
-              nodeRef={nodeRef}    
-              unmountOnExit         
+              timeout={500}
+              nodeRef={nodeRef}
+              unmountOnExit
             >
               <div ref={nodeRef} className="route-wrapper">
                 <Routes location={location}>
