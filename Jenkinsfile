@@ -8,7 +8,7 @@ pipeline {
     STG_COMPOSE  = 'docker-compose.staging.yml'
     PROD_STACK   = 'app-prod'
     STG_STACK    = 'app-staging'
-    DC = ''    // 여기 채움
+    DC = 'docker compose'    
   }
 
   stages {
