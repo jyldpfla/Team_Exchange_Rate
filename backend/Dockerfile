@@ -9,7 +9,7 @@ COPY gradle ./gradle
 RUN sed -i 's/\r$//' gradlew && chmod +x gradlew
 
 # 의존성 프리-다운로드
-RUN ./gradlew --no-daemon dependencies || true
+RUN ./gradlew --no-daemon dependencies
 
 # 소스 복사 후 빌드
 COPY src ./src
