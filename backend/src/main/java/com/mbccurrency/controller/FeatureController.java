@@ -15,7 +15,7 @@ import java.util.List;
 public class FeatureController {
 	private final ExchangeService service;
 
-    public ExchangeController(ExchangeService service) {
+    public FeatureController(ExchangeService service) {
         this.service = service;
     }
 
@@ -36,7 +36,7 @@ public class FeatureController {
     // 단일 통화 시계열 (프론트 차트용)
     @GetMapping("/series")
     public ResponseEntity<List<SeriesPoint>> series(
-            @RequestParam String currency,  // usd/jpy/eur/cny
+            @RequestParam String currency, 
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
         return ResponseEntity.ok(service.getSeries(currency, start, end));

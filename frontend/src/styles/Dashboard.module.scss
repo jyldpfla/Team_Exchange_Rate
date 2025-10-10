@@ -1,6 +1,6 @@
 .page {
-    height: calc(100vh - $nav-height); 
-    display: flex; 
+    height: calc(100vh - $nav-height);
+    display: flex;
     flex-direction: column;
     overflow: hidden;
 }
@@ -22,14 +22,14 @@
     grid-template-rows: 1fr;
     gap: 16px;
     padding: 16px;
-    
+
     flex: 1;
     overflow: hidden;
 }
 
 .left,
 .right {
-    height: 100%; 
+    height: 100%;
     min-height: 0;
     display: flex;
     flex-direction: column;
@@ -57,7 +57,8 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 8px;
-    flex-shrink: 0; /* ✅ 헤더는 고정 높이 유지 */
+    flex-shrink: 0;
+    /* ✅ 헤더는 고정 높이 유지 */
 
     h2,
     h3 {
@@ -80,7 +81,8 @@
     display: flex;
     gap: 8px;
     margin: 8px 0 12px;
-    flex-shrink: 0; /* ✅ 탭은 고정 높이 유지 */
+    flex-shrink: 0;
+    /* ✅ 탭은 고정 높이 유지 */
 }
 
 .tab,
@@ -105,7 +107,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    
+
     /* ✅ 카드 안에서 남는 공간을 모두 차지 */
     flex: 1;
     min-height: 0;
@@ -114,8 +116,9 @@
 .fakeChart {
     /* ✅ chartArea 내에서 최대한 높이 확보 */
     flex: 1;
-    min-height: 0; /* ✅ 최소 높이 제거해서 더 많이 늘어나게 */
-    margin: 0; /* ✅ 좌우 마진 제거해서 가로도 꽉 차게 */
+    height: 100%;
+    margin: 0;
+    /* ✅ 좌우 마진 제거해서 가로도 꽉 차게 */
     border-radius: 10px;
     border: 1px dashed #cfcfe6;
     background: linear-gradient(180deg, #f9f9ff, #f1f2ff);
@@ -131,7 +134,8 @@
     gap: 6px;
     justify-content: center;
     margin-top: 12px;
-    flex-shrink: 0; /* ✅ 페이지네이션은 고정 높이 */
+    flex-shrink: 0;
+    /* ✅ 페이지네이션은 고정 높이 */
 }
 
 .dot,
@@ -151,9 +155,11 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin: 8px 0 0; /* ✅ 아래 마진 제거 */
+    margin: 8px 0 0;
+    /* ✅ 아래 마진 제거 */
     flex-shrink: 0;
-    padding-bottom: 16px; /* ✅ 아래쪽에만 여백 */
+    padding-bottom: 16px;
+    /* ✅ 아래쪽에만 여백 */
 }
 
 .row {
@@ -172,7 +178,6 @@
 }
 
 .ghost {
-    padding: 8px 12px;
     border-radius: 8px;
     border: 1px solid #ddd;
     background: #fff;
@@ -213,9 +218,9 @@
     margin-right: 2px;
     position: relative;
     color: #666;
-    
+
     /* 폴더 그림자 효과 */
-    box-shadow: inset 0 -1px 2px rgba(0,0,0,0.1);
+    box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* 활성 폴더 탭 */
@@ -225,7 +230,7 @@
     border-color: #ccc;
     z-index: 3;
     box-shadow: none;
-    
+
     /* 아래쪽으로 1px 확장해서 경계선과 연결 */
     margin-bottom: -1px;
     padding-bottom: 9px;
@@ -246,7 +251,7 @@
     margin: 0;
     padding: 0 0 0 16px;
     line-height: 1.6;
-    
+
     li {
         margin-bottom: 4px;
         font-size: 14px;
@@ -261,7 +266,7 @@
         /* 모바일에서는 세로 스택으로 변경되므로 높이 제한 해제 */
         align-items: normal;
     }
-    
+
     .left,
     .right {
         /* 모바일에서는 각각 적절한 높이를 가지도록 */

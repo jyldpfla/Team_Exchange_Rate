@@ -9,6 +9,8 @@ import CurrencyCalculator from "../components/CurrencyCalc";
 import CommodityTableCard from "../components/CommodityTableCard";
 import { useAppSelector } from "../app/hook";
 import { selectExchangeLoading, selectLatestExchange } from "../features/exchange.slice"
+import { DashboardGraphs } from "../constants/sampleDatas";
+import HtmlFrame from "../components/HtmlFrame";
 
 interface Props {
     className?: string;
@@ -73,9 +75,9 @@ export default function DashboardPage(props: Props) {
                         {/* 차트 영역(placeholder) */}
                         <div className={styles.chartArea}>
                             <ChartCarousel key={isPaused ? selectedOption : 'auto'} intervalMs={isPaused ? 0 : 3000} initialIndex={isPaused ? getSelectedIndex() : 0}>
-                                {CURRENCY_OPTIONS.map((option, index) => (
+                                {DashboardGraphs.map((option, index) => (
                                     <div key={index} className={styles.fakeChart}>
-                                        {option.label}
+                                        <HtmlFrame src={option.src} />
                                     </div>
                                 ))}
                             </ChartCarousel>
@@ -87,7 +89,7 @@ export default function DashboardPage(props: Props) {
                     {/* 우측: 컨트롤/리스트 패널 */}
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>
-                            <h3>Search</h3>
+                            <h3>FX rate calculation</h3>
                         </div>
 
                         <div className={styles.controls}>

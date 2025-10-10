@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/CommodityTableCard.scss";
+import { defaultColumns } from "../constants/sampleDatas";
 
 // 기존 Row 타입 유지 (하위 호환성)
 export type Row = {
@@ -10,7 +11,7 @@ export type Row = {
   diff: number;        
   rate: number;        
   baseDate: string;    
-  exchange: string;    
+  exchange?: string;    
 };
 
 // 새로운 제네릭 컬럼 정의
@@ -31,49 +32,8 @@ interface Props<T = Row> {
   className?: string;
 }
 
-const nf = new Intl.NumberFormat("en-US");
-const pf = (v: number) => `${(v >= 0 ? "+" : "")}${v.toFixed(2)}%`;
-
-// 기본 컬럼 설정 (기존 원자재 테이블과 동일)
-const defaultColumns: TableColumn<Row>[] = [
-  { key: 'name', header: '상품명', render: (value) => <span className="name">{value}</span> },
-  { key: 'month', header: '월물', render: (value) => <span className="badge">{value}</span> },
-  { key: 'unit', header: '단위', className: 'unit' },
-  { key: 'price', header: '현재가', className: 'num', render: (value) => nf.format(value) },
-  { 
-    key: 'diff', 
-    header: '전일비', 
-    className: 'num', 
-    render: (value, row) => {
-      const dir = value > 0 ? "up" : value < 0 ? "down" : "flat";
-      return (
-        <span className={`delta ${dir}`} aria-label={`전일비 ${value}`}>
-          <i aria-hidden="true" />
-          <span>{nf.format(Math.abs(value))}</span>
-        </span>
-      );
-    }
-  },
-  { 
-    key: 'rate', 
-    header: '등락률', 
-    className: 'num', 
-    render: (value, row) => {
-      const dir = row.diff > 0 ? "up" : row.diff < 0 ? "down" : "flat";
-      return (
-        <span className={`rate ${dir}`} aria-label={`등락률 ${pf(value)}`}>
-          <i aria-hidden="true" />
-          <span>{pf(Math.abs(value))}</span>
-        </span>
-      );
-    }
-  },
-  { key: 'baseDate', header: '기준일', className: 'date' },
-  { key: 'exchange', header: '거래소', className: 'ex' }
-];
-
 const CommodityTableCard = <T extends Record<string, any> = Row>({ 
-  title = "테이블", 
+  title = "Grains", 
   rows, 
   columns = defaultColumns as TableColumn[],
   className = ""

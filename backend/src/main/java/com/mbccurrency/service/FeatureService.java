@@ -6,5 +6,5 @@ import com.mbccurrency.repository.PgExchangeRateRepository;
 
 @Service
 public class FeatureService {
-	private final PgFeatureRepository repo;
+//	private final PgFeatureRepository repo;
 }

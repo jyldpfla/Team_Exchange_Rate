@@ -35,8 +35,4 @@ public class ExchangeRate {
     public Double getEur() { return eur; }
     public Double getCny() { return cny; }
 
-    public void setUsd(Double usd) { this.usd = usd; }
-    public void setJpy(Double jpy) { this.jpy = jpy; }
-    public void setEur(Double eur) { this.eur = eur; }
-    public void setCny(Double cny) { this.cny = cny; }
 }

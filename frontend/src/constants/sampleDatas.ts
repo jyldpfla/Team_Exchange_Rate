@@ -1,4 +1,6 @@
 import type { Row, TableColumn } from "../components/CommodityTableCard";
+import { cls, col, numCol, R } from "../lib/data";
+import type { Graph_Option } from "../types/option";
 
 export const rows: Row[] = [
   { name:"옥수수", month:"25-12", unit:"센트/부셀", price:417.00, diff:-2.75, rate:-0.66, baseDate:"2025.09.10", exchange:"CBOT" },
@@ -14,20 +16,40 @@ export const rows: Row[] = [
   { name:"코코아", month:"25-12", unit:"달러/톤", price:7468.00, diff:73.00, rate:0.99, baseDate:"2025.09.10", exchange:"ICE" },
 ];
 
-// interface CustomData {
-//   id: number;
-//   title: string;
-//   status: 'active' | 'inactive';
-//   amount: number;
-//   date: string;
-// }
+export const DashboardGraphs:Graph_Option[] = [
+  { value: "usdkrw", label: "USD/KRW", src: "/hong/expimp/expimp_correlation_bar.html" },
+  { value: "eurkrw", label: "EUR/KRW", src: "/charts/eurkrw.html" },
+  { value: "cnykrw", label: "CNY/KRW", src: "/charts/cnykrw.html" },
+  { value: "jpykrw", label: "JPY/KRW", src: "/charts/jpykrw.html" },
+]
 
-// export const customColumns: TableColumn<CustomData>[] = [
-//   { key: 'id', header: 'ID', className: 'num' },
-//   { key: 'title', header: '제목' },
-//   { key: 'date', header: '날짜', className: 'date' }
-// ];
+export const defaultColumns: TableColumn<Row>[] = [
+  col<Row>("name",     "상품명", { render: R.name() }),
+  col<Row>("month",    "월물",   { render: R.badge() }),
+  col<Row>("unit",     "단위",   { className: cls.unit }),
+  numCol<Row>("price", "현재가", R.number()),
+  numCol<Row>("diff",  "전일비", R.delta()),
+  numCol<Row>("rate",  "등락률", R.rate()),
+  col<Row>("baseDate", "기준일", { className: cls.date }),
+  col<Row>("exchange", "거래소", { className: cls.ex }),
+];
 
-// export const customData: CustomData[] = [
-//   { id: 1, title: '항목1', status: 'active', amount: 10000, date: '2024-09-29' }
-// ];
+export const grainColumns: TableColumn<Row>[] = [
+  col<Row>("name",     "상품명", { render: R.name() }),
+  col<Row>("month",    "월물",   { render: R.badge() }),
+  col<Row>("unit",     "단위",   { className: cls.unit }),
+  numCol<Row>("price", "현재가", R.number()),
+  numCol<Row>("diff",  "전일비", R.delta()),
+  numCol<Row>("rate",  "등락률", R.rate()),
+  col<Row>("baseDate", "기준일", { className: cls.date }),
+];
+
+export const CommoditiesColumns: TableColumn<Row>[] = [
+  col<Row>("name",     "상품명", { render: R.name() }),
+  col<Row>("month",    "월물",   { render: R.badge() }),
+  col<Row>("unit",     "단위",   { className: cls.unit }),
+  numCol<Row>("price", "현재가", R.number()),
+  numCol<Row>("diff",  "전일비", R.delta()),
+  numCol<Row>("rate",  "등락률", R.rate()),
+  col<Row>("baseDate", "기준일", { className: cls.date }),
+];

@@ -14,7 +14,6 @@ import InsightBoardPage from './pages/InsightBoard'
 import VisualizationBoardPage from './pages/VisualizationBoard'
 import VisualizationDetailPage from './pages/VisualDetail'
 import { connectMDb, connectPDb, getHealth } from './api/health'
-import { getExchange } from './api/data'
 import { useAppDispatch } from './app/hook'
 import { loadLatestExchange } from './features/exchange.slice'
 
