@@ -8,17 +8,25 @@ pipeline {
     STG_COMPOSE  = 'docker-compose.staging.yml'
     PROD_STACK   = 'app-prod'
     STG_STACK    = 'app-staging'
-    DC           = ''   // 나중에 Detect stage에서 값 설정
+    DC = ''    // 여기 채움
   }
 
   stages {
-
     stage('Detect compose') {
       steps {
         script {
-          // docker compose 지원 여부 탐지 → env.DC에 저장
-          def rc = sh(returnStatus: true, script: 'docker compose version >/dev/null 2>&1')
-          env.DC = (rc == 0) ? 'docker compose' : 'docker-compose'
+          // docker compose 먼저 탐지
+          def rc1 = sh(returnStatus: true, script: 'docker compose version >/dev/null 2>&1')
+          if (rc1 == 0) {
+            env.DC = 'docker compose'
+          } else {
+            def rc2 = sh(returnStatus: true, script: 'docker-compose version >/dev/null 2>&1')
+            if (rc2 == 0) {
+              env.DC = 'docker-compose'
+            } else {
+              error('Neither "docker compose" nor "docker-compose" is available in PATH')
+            }
+          }
           echo "Using: ${env.DC}"
           sh "${env.DC} version"
         }
@@ -32,23 +40,22 @@ pipeline {
           whoami
           id
           pwd
-          ls -al
+          which docker || true
           docker version
         '''
       }
     }
 
-    stage('Checkout') {
-      steps { checkout scm }
-    }
+    stage('Checkout') { steps { checkout scm } }
 
     stage('Build images') {
       steps {
-        sh """
+        // ✅ 여기서부터는 $DC 로 사용 (쉘이 확장)
+        sh '''
           set -euxo pipefail
-          ${DC} -f ${BASE_COMPOSE} pull || true
-          DOCKER_BUILDKIT=1 ${DC} -f ${BASE_COMPOSE} build --pull --progress=plain
-        """
+          $DC -f ${BASE_COMPOSE} pull || true
+          DOCKER_BUILDKIT=1 $DC -f ${BASE_COMPOSE} build --pull --progress=plain
+        '''
       }
     }
 
@@ -57,19 +64,19 @@ pipeline {
       steps {
         script {
           if (env.BRANCH_NAME == 'main') {
-            sh """
+            sh '''
               set -eux
-              ${DC} -p ${PROD_STACK} -f ${BASE_COMPOSE} -f ${PROD_COMPOSE} down --remove-orphans || true
-              ${DC} -p ${PROD_STACK} -f ${BASE_COMPOSE} -f ${PROD_COMPOSE} up -d
-              ${DC} -p ${PROD_STACK} -f ${BASE_COMPOSE} -f ${PROD_COMPOSE} ps
-            """
+              $DC -p ${PROD_STACK} -f ${BASE_COMPOSE} -f ${PROD_COMPOSE} down --remove-orphans || true
+              $DC -p ${PROD_STACK} -f ${BASE_COMPOSE} -f ${PROD_COMPOSE} up -d
+              $DC -p ${PROD_STACK} -f ${BASE_COMPOSE} -f ${PROD_COMPOSE} ps
+            '''
           } else {
-            sh """
+            sh '''
               set -eux
-              ${DC} -p ${STG_STACK} -f ${BASE_COMPOSE} -f ${STG_COMPOSE} down --remove-orphans || true
-              ${DC} -p ${STG_STACK} -f ${BASE_COMPOSE} -f ${STG_COMPOSE} up -d
-              ${DC} -p ${STG_STACK} -f ${BASE_COMPOSE} -f ${STG_COMPOSE} ps
-            """
+              $DC -p ${STG_STACK} -f ${BASE_COMPOSE} -f ${STG_COMPOSE} down --remove-orphans || true
+              $DC -p ${STG_STACK} -f ${BASE_COMPOSE} -f ${STG_COMPOSE} up -d
+              $DC -p ${STG_STACK} -f ${BASE_COMPOSE} -f ${STG_COMPOSE} ps
+            '''
           }
         }
       }
@@ -89,7 +96,7 @@ pipeline {
       }
     }
     failure {
-      echo "❌ 실패. (참고용 로그 — 실패해도 파이프라인 실패로 간주하지 않음)"
+      echo "❌ 실패. (참고 로그)"
       sh '''
         (docker compose -f docker-compose.yml logs --no-color | tail -n 200) || true
         (docker compose -p app-staging -f docker-compose.yml -f docker-compose.staging.yml logs --no-color | tail -n 200) || true
