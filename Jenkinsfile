@@ -10,6 +10,18 @@ pipeline {
     PROD_STACK = 'app-prod'
   }
 
+  stage('Pre-clean') {
+        steps {
+            echo '🧹 Cleaning up old containers & networks...'
+            sh '''
+                docker compose -p app-staging -f docker-compose.yml -f docker-compose.staging.yml down --remove-orphans || true
+                docker system prune -af || true
+                docker network prune -f || true
+            '''
+        }
+    }
+
+
   stages {
     stage('Detect compose') {
       steps {
