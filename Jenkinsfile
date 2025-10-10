@@ -1,6 +1,3 @@
-def DC = 'docker compose'  // compose 플러그인 기본
-try { sh "${DC} version" } catch (e) { DC = 'docker-compose'; sh "${DC} version" }
-
 pipeline {
   agent any
   options { timestamps(); skipDefaultCheckout(false) }
@@ -11,9 +8,23 @@ pipeline {
     STG_COMPOSE  = 'docker-compose.staging.yml'
     PROD_STACK   = 'app-prod'
     STG_STACK    = 'app-staging'
+    DC           = ''   // 나중에 Detect stage에서 값 설정
   }
 
   stages {
+
+    stage('Detect compose') {
+      steps {
+        script {
+          // docker compose 지원 여부 탐지 → env.DC에 저장
+          def rc = sh(returnStatus: true, script: 'docker compose version >/dev/null 2>&1')
+          env.DC = (rc == 0) ? 'docker compose' : 'docker-compose'
+          echo "Using: ${env.DC}"
+          sh "${env.DC} version"
+        }
+      }
+    }
+
     stage('Sanity') {
       steps {
         sh '''
@@ -23,7 +34,6 @@ pipeline {
           pwd
           ls -al
           docker version
-          docker compose version || docker-compose version
         '''
       }
     }
@@ -67,21 +77,19 @@ pipeline {
 
     stage('Build-only for feature/*') {
       when { not { anyOf { branch 'main'; branch 'develop' } } }
-      steps {
-        echo 'Feature branch: build only (no deploy).'
-      }
+      steps { echo 'Feature branch: build only (no deploy).' }
     }
   }
 
   post {
     success {
       script {
-        if (env.BRANCH_NAME == 'main')   echo "✅ PROD:    http://<OCI_PUBLIC_IP>:8005"
+        if (env.BRANCH_NAME == 'main')    echo "✅ PROD:    http://<OCI_PUBLIC_IP>:8005"
         if (env.BRANCH_NAME == 'develop') echo "✅ STAGING: http://<OCI_PUBLIC_IP>:8006"
       }
     }
     failure {
-      echo "❌ 실패. (참고용 로그 — 실패해도 파이프라인에 영향 없도록 처리)"
+      echo "❌ 실패. (참고용 로그 — 실패해도 파이프라인 실패로 간주하지 않음)"
       sh '''
         (docker compose -f docker-compose.yml logs --no-color | tail -n 200) || true
         (docker compose -p app-staging -f docker-compose.yml -f docker-compose.staging.yml logs --no-color | tail -n 200) || true
