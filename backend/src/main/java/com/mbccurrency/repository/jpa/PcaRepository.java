@@ -1,5 +1,5 @@
 // repository/PcaRepository.java
-package com.mbccurrency.repository;
+package com.mbccurrency.repository.jpa;
 
 import com.mbccurrency.entity.Pca;
 import org.springframework.data.jpa.repository.JpaRepository;

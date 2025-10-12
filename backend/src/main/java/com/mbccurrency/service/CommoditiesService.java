@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.mbccurrency.api.dto.CommoditiesDto;
 import com.mbccurrency.entity.Commodities;
-import com.mbccurrency.repository.CommoditiesRepository;
+import com.mbccurrency.repository.jpa.CommoditiesRepository;
 
 @Service
 public class CommoditiesService {

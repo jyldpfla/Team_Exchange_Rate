@@ -1,5 +1,5 @@
 // src/main/java/com/mbccurrency/repository/PgInspectRepository.java
-package com.mbccurrency.repository;
+package com.mbccurrency.repository.jpa;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

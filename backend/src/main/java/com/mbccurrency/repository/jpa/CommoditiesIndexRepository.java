@@ -1,5 +1,5 @@
 // repository/CommoditiesIndexRepository.java
-package com.mbccurrency.repository;
+package com.mbccurrency.repository.jpa;
 
 import com.mbccurrency.entity.CommoditiesIndex;
 import org.springframework.data.jpa.repository.JpaRepository;

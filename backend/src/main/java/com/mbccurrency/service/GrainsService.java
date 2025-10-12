@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mbccurrency.api.dto.GrainsDto;
-import com.mbccurrency.repository.PgGrainsRepository;
+import com.mbccurrency.repository.jpa.PgGrainsRepository;
 
 @Service
 public class GrainsService {

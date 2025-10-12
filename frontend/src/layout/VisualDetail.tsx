@@ -1,23 +1,26 @@
 import styles from "../styles/Dashboard.module.scss";
-import Header from "../layout/Header";
-import ToggleGroup from "../layout/ToggleGroup";
+import Header from "./Header";
 import Select from "../components/Select";
-import { DATAS, GRAPH_OPTIONS } from "../constants/options";
-import ChartCarousel from "../layout/ChartCarousel";
+import { GRAPH_OPTIONS } from "../constants/options";
+import ChartCarousel from "./ChartCarousel";
 import { useState } from "react";
+import type { Graph_Option } from "../types/option";
+import HtmlFrame from "../components/HtmlFrame";
 
 interface Props {
     className?: string;
+    graph: Graph_Option[];
+    datas: Record<string, string[]>;
 }
 
 export default function VisualizationDetailPage(props: Props) {
-    const { className } = props;
-    const [selectedOption, setSelectedOption] = useState(GRAPH_OPTIONS[0].value);
+    const { className, graph, datas } = props;
+    const [selectedOption, setSelectedOption] = useState(graph[0].value);
     const [isPaused, setIsPaused] = useState(false);
-    const [activeTab, setActiveTab] = useState<string>('STK');
+    const [activeTab, setActiveTab] = useState<string>('Comment');
 
     const getSelectedIndex = () => {
-        return GRAPH_OPTIONS.findIndex(opt => opt.value === selectedOption);
+        return graph.findIndex(opt => opt.value === selectedOption);
     };
 
     const handleSelectChange = (value: string) => {
@@ -43,21 +46,21 @@ export default function VisualizationDetailPage(props: Props) {
                         <div className={styles.cardHeader}>
                             <h2>Statistics</h2>
                             <Select
-                                options={GRAPH_OPTIONS}
+                                options={graph}
                                 value={selectedOption}
                                 onChange={handleSelectChange}
                             />
                         </div>
 
                         {/* 탭 */}
-                        <ToggleGroup />
+                        {/* <ToggleGroup /> */}
 
                         {/* 차트 영역(placeholder) */}
                         <div className={styles.chartArea}>
                             <ChartCarousel key={isPaused ? selectedOption : 'auto'} intervalMs={isPaused ? 0 : 3000} initialIndex={isPaused ? getSelectedIndex() : 0}>
-                                {GRAPH_OPTIONS.map((option, index) => (
+                                {graph.map((option, index) => (
                                     <div key={index} className={styles.fakeChart}>
-                                        {option.label}
+                                        <HtmlFrame src={option.src} useBase={option.useBase} />
                                     </div>
                                 ))}
                             </ChartCarousel>
@@ -69,12 +72,12 @@ export default function VisualizationDetailPage(props: Props) {
                     {/* 우측: 컨트롤/리스트 패널 */}
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>
-                            <h3>Search</h3>
+                            <h3>Insight</h3>
                         </div>
 
                         <div className={styles.cardBody}>
                             <div className={styles.folderTabs}>
-                                {Object.keys(DATAS).map(tab => (
+                                {Object.keys(datas).map(tab => (
                                     <button
                                         key={tab}
                                         className={activeTab === tab ? styles.folderTabActive : styles.folderTab}
@@ -87,7 +90,7 @@ export default function VisualizationDetailPage(props: Props) {
 
                             <div className={styles.tabContent}>
                                 <ul className={styles.list}>
-                                    {DATAS[activeTab]?.map((item, index) => (
+                                    {datas[activeTab]?.map((item, index) => (
                                         <li key={index}>{item}</li>
                                     ))}
                                 </ul>

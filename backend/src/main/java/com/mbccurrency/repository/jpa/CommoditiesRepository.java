@@ -1,5 +1,5 @@
 // repository/CommoditiesRepository.java
-package com.mbccurrency.repository;
+package com.mbccurrency.repository.jpa;
 
 import com.mbccurrency.entity.Commodities;
 import com.mbccurrency.entity.Grains;

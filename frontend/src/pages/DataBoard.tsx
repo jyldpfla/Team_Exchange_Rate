@@ -1,79 +1,114 @@
+import HtmlFrame from "../components/HtmlFrame";
 import styles from "../styles/Dashboard.module.scss";
 import dataStyles from "../styles/DataBoard.module.scss";
 import Header from "../layout/Header";
-import CommodityTableCard from "../components/CommodityTableCard";
-import { CommoditiesColumns, grainColumns } from "../constants/sampleDatas";
-import { GRAPH_OPTIONS } from "../constants/options";
+import {
+  CommoditiesColumns,
+  ExportImportColumns,
+  grainColumns,
+  SentimentColumns,
+} from "../constants/sampleDatas";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hook";
 import { loadNLatestGrains, selectGrainsRows } from "../features/grains.slice";
 import { loadNLatestCommodities, selectCommoditiesRows } from "../features/commodities.slice";
 import { loadNLatestStock, selectStockRows } from "../features/stock.slice";
+import { loadNLatestNonNullSentiment, selectSentimentRows } from "../features/sentiment.slice";
+import { loadNLatestExportImport, selectExportImportRows } from "../features/exportImport.slice";
+import CommodityTableCard, { type Row, type TableColumn } from "../components/CommodityTableCard";
 
 interface Props {
-    className?: string;
+  className?: string;
 }
 
-export default function DataBoardPage(props: Props) {
-    const { className } = props;
-    const dispatch = useAppDispatch();
-    const grainRows = useAppSelector(selectGrainsRows);
-    const commoditiesRows = useAppSelector(selectCommoditiesRows);
-    const stockRows = useAppSelector(selectStockRows);
+export default function DataBoardPage({ className }: Props) {
+  const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        dispatch(loadNLatestGrains());
-        dispatch(loadNLatestCommodities());
-        dispatch(loadNLatestStock());
-    }, [dispatch])
+  // Redux store selectors
+  const grainRows = useAppSelector(selectGrainsRows);
+  const commoditiesRows = useAppSelector(selectCommoditiesRows);
+  const stockRows = useAppSelector(selectStockRows);
+  const sentimentRows = useAppSelector(selectSentimentRows);
+  const exportImportRows = useAppSelector(selectExportImportRows);
 
-    return (
-        <div className={`${styles.page} ${className}`}>
+  useEffect(() => {
+    dispatch(loadNLatestGrains());
+    dispatch(loadNLatestCommodities());
+    dispatch(loadNLatestStock());
+    dispatch(loadNLatestNonNullSentiment());
+    dispatch(loadNLatestExportImport());
+  }, [dispatch]);
 
-            <Header title="DataSets" />
+  // ✅ 데이터 + 그래프 매핑 (공통 타입으로 맞춤)
+  const sections: {
+    key: string;
+    title: string;
+    rows: Row[];
+    columns: TableColumn<Row>[];
+    graphSrc: string;
+  }[] = [
+    {
+      key: "grains",
+      title: "Grains",
+      rows: grainRows as Row[],
+      columns: grainColumns as TableColumn<Row>[],
+      graphSrc: "/hong/grains/grains.html",
+    },
+    {
+      key: "commodities",
+      title: "Commodities",
+      rows: commoditiesRows as Row[],
+      columns: CommoditiesColumns as TableColumn<Row>[],
+      graphSrc: "/hong/commodities/commodities.html",
+    },
+    {
+      key: "stock",
+      title: "Stock",
+      rows: stockRows as Row[],
+      columns: CommoditiesColumns as TableColumn<Row>[],
+      graphSrc: "/hong/stock/stock.html",
+    },
+    {
+      key: "sentiment",
+      title: "Sentiment",
+      rows: sentimentRows as unknown as Row[],
+      columns: SentimentColumns as TableColumn<Row>[],
+      graphSrc: "/hong/sentiment/sentiment.html",
+    },
+    {
+      key: "exportImport",
+      title: "Export Import Index",
+      rows: exportImportRows as Row[],
+      columns: ExportImportColumns as TableColumn<Row>[],
+      graphSrc: "/hong/expimp/expimp_predictions.html",
+    },
+  ];
 
-            {/* 본문 컨텐츠 두 컬럼 */}
-            <main className={styles.content}>
-                <section className={styles.left}>
-                    {/* 좌측: 차트/통계 영역 */}
-                    <div className={`${styles.card} ${dataStyles.card}`} style={{display: "block"}}>
-                        <div className={styles.cardHeader}>
-                            <h2>Datas</h2>
-                        </div>
-                        <CommodityTableCard rows={grainRows} columns={grainColumns} />
-                        <CommodityTableCard title="Commodities" rows={commoditiesRows} columns={CommoditiesColumns} />
-                        <CommodityTableCard title="Stock" rows={stockRows} columns={CommoditiesColumns} />
-                    </div>
-                </section>
-                <aside className={styles.right}>
-                    {/* 우측: 컨트롤/리스트 패널 */}
-                    <div className={`${styles.card} ${dataStyles.card}`}>
-                        <div className={styles.cardHeader}>
-                            <h3>Graphs</h3>
-                        </div>
-                        <div className={`${styles.chartArea} ${dataStyles.chartArea}`}>
-                            <div className={`${styles.fakeChart} ${dataStyles.fakeChart}`}>
-                                {GRAPH_OPTIONS[0].label}
-                            </div>
-                            <div className={styles.fakeChart}>
-                                {GRAPH_OPTIONS[0].label}
-                            </div>
-                            <div className={styles.fakeChart}>
-                                {GRAPH_OPTIONS[0].label}
-                            </div>
-                            <div className={styles.fakeChart}>
-                                {GRAPH_OPTIONS[0].label}
-                            </div>
-                            <div className={styles.fakeChart}>
-                                {GRAPH_OPTIONS[0].label}
-                            </div>
-                        </div>
-    
-                    </div>
-                </aside>
+  return (
+    <div className={`${styles.page} ${className}`}>
+      <Header title="DataSets" />
 
-            </main>
+      <main className={`${styles.content} ${dataStyles.unifiedLayout}`}>
+        <div className={`${styles.card} ${dataStyles.card}`}>
+          <div className={styles.cardHeader}>
+            <h2>Datas & Graphs</h2>
+          </div>
 
+          {sections.map((section) => (
+            <div className={dataStyles.dataRow} key={section.key}>
+              {/* ✅ 타입 안전하게 캐스팅된 props */}
+              <CommodityTableCard
+                title={section.title}
+                rows={section.rows}
+                columns={section.columns}
+              />
+              <div className={dataStyles.chartBox}>
+                <HtmlFrame src={section.graphSrc} />
+              </div>
+            </div>
+          ))}
         </div>
-    );
+      </main>
+    </div>
+  );
 }

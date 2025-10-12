@@ -18,9 +18,9 @@ export default function Main() {
                         <button className={styles.navButton}>
                             <Link to="/visualizationboard">Visualization</Link>
                         </button>
-                        <button className={styles.navButton}>
+                        {/* <button className={styles.navButton}>
                             <Link to="/insightsboard">Insight</Link>
-                        </button>
+                        </button> */}
                     </nav>
                 </div>
             </section>

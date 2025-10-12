@@ -1,4 +1,4 @@
-package com.mbccurrency.repository;
+package com.mbccurrency.repository.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

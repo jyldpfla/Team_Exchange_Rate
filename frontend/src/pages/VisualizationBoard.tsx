@@ -1,7 +1,6 @@
 import styles from "../styles/Dashboard.module.scss";
 import visStyles from "../styles/Visualization.module.scss";
 import Header from "../layout/Header";
-import ToggleGroup from "../layout/ToggleGroup";
 import Select from "../components/Select";
 import { GRAPH_OPTIONS } from "../constants/options";
 import ChartCarousel from "../layout/ChartCarousel";
@@ -50,7 +49,7 @@ export default function VisualizationBoardPage(props: Props) {
                         </div>
 
                         {/* 탭 */}
-                        <ToggleGroup />
+                        {/* <ToggleGroup /> */}
 
                         {/* 차트 영역(placeholder) */}
                         <div className={styles.chartArea}>

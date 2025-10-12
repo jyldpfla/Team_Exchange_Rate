@@ -1,5 +1,5 @@
 // repository/StockRepository.java
-package com.mbccurrency.repository;
+package com.mbccurrency.repository.jpa;
 
 import com.mbccurrency.entity.Stock;
 import org.springframework.data.domain.Pageable;
