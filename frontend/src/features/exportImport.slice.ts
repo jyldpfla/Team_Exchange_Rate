@@ -148,11 +148,6 @@ export function toSentimentRows(
   ];
 }
 
-const META = {
-  export: { name: "수출물가지수", unit: "2020=100", exchange: "KOSIS" },
-  import: { name: "수입물가지수", unit: "2020=100", exchange: "KOSIS" },
-} as const;
-
 
 const exportImportSlice = createSlice({
   name: "exportImport",

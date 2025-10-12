@@ -222,7 +222,3 @@ export const selectSentimentError = (s: RootState) => s.sentiment.error;
 
 export const { setRaw } = sentimentSlice.actions;
 export default sentimentSlice.reducer;
-function dispatch(arg0: { payload: any[]; type: "sentiment/setRaw"; }) {
-    throw new Error("Function not implemented.");
-}
-
