@@ -4,7 +4,7 @@ WORKDIR /app
 
 # 패키지 먼저 복사 → 캐시 최적화
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --omit=dev
 
 # 소스 복사 후 빌드
 COPY . .
