@@ -14,17 +14,28 @@ pipeline {
       }
     }
 
-    stage('Build images') {
+    stage('Build frontend (cache stage)') {
       steps {
-        echo '🛠 Building Docker images...'
+        echo '🧱 Building cached frontend build stage...'
         sh '''
-          docker compose -f docker-compose.yml pull || true
+          cd frontend
+          # 👉 프론트 빌드 스테이지만 먼저 캐시
+          docker build --target build -t frontend-build-cache .
+        '''
+      }
+    }
+
+    stage('Build images (full)') {
+      steps {
+        echo '🛠 Building full Docker images...'
+        sh '''
+          # compose로 전체 이미지 빌드 (frontend, backend 포함)
           docker compose -f docker-compose.yml build --pull
         '''
       }
     }
 
-    stage('Deploy by branch') {
+    stage('Deploy to STAGING') {
       when { branch 'develop' }
       steps {
         echo '🚀 Deploying to STAGING environment...'
@@ -34,12 +45,12 @@ pipeline {
       }
     }
 
-    stage('Build-only for feature/*') {
+    stage('Feature branch build test') {
       when { expression { env.BRANCH_NAME.startsWith('feature/') } }
       steps {
-        echo '🧱 Feature branch detected — build only.'
+        echo '🧩 Feature branch detected — build test only (no deploy).'
         sh '''
-          docker compose -f docker-compose.yml build --pull
+          docker compose -f docker-compose.yml build
         '''
       }
     }
