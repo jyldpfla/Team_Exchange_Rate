@@ -3,7 +3,8 @@ package com.mbccurrency.service;
 
 import com.mbccurrency.api.dto.StockDto;
 import com.mbccurrency.entity.Stock;
-import com.mbccurrency.repository.StockRepository;
+import com.mbccurrency.repository.jpa.StockRepository;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.PageRequest;

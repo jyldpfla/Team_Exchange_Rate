@@ -1,6 +1,5 @@
 import styles from "../styles/Dashboard.module.scss";
 import Header from "../layout/Header";
-import ToggleGroup from "../layout/ToggleGroup";
 import Select from "../components/Select";
 import { CURRENCY_OPTIONS } from "../constants/options";
 import ChartCarousel from "../layout/ChartCarousel";
@@ -9,8 +8,8 @@ import CurrencyCalculator from "../components/CurrencyCalc";
 import CommodityTableCard from "../components/CommodityTableCard";
 import { useAppSelector } from "../app/hook";
 import { selectExchangeLoading, selectLatestExchange } from "../features/exchange.slice"
-import { DashboardGraphs } from "../constants/sampleDatas";
 import HtmlFrame from "../components/HtmlFrame";
+import { DashboardGraphs } from "../constants/graphDatas";
 
 interface Props {
     className?: string;
@@ -70,7 +69,7 @@ export default function DashboardPage(props: Props) {
                         </div>
 
                         {/* 탭 */}
-                        <ToggleGroup />
+                        {/* <ToggleGroup /> */}
 
                         {/* 차트 영역(placeholder) */}
                         <div className={styles.chartArea}>

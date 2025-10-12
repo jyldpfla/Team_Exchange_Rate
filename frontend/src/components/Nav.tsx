@@ -1,13 +1,12 @@
 // src/components/layout/Nav.tsx
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDown, Rocket } from "lucide-react"; // 왼쪽 로고 아이콘 예시
+import { ChevronDown, Rocket } from "lucide-react";
 import styles from "../styles/Nav.module.scss";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 const Nav = () => {
     const location = useLocation();
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-    const dropdownRef = useRef<HTMLDivElement>(null);
 
     const menus = [
         { 
@@ -16,43 +15,20 @@ const Nav = () => {
         },
         { 
             label: "Visualization", 
-            path: "/visualizationboard",
+            path: "/visualizationboard/S&P500",
             dropdown: [
-                { label: "S&P500", path: "/visualizationboard/S&P500" }
+                { label: "S&P500", path: "/visualizationboard/S&P500" },
+                { label: "Oil", path: "/visualizationboard/Oil" },
+                { label: "Import/Export Price Index", path: "/visualizationboard/ieprice" },
+                { label: "Interest Rate", path: "/visualizationboard/interestrate" },
+                { label: "Gold", path: "/visualizationboard/gold" },
+                { label: "News Sentiment", path: "/visualizationboard/newssentiment" },
             ]
-        },
-        { 
-            label: "Insights", 
-            path: "/insightsboard" 
-            // dropdown이 없는 메뉴
         },
     ];
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setActiveDropdown(null);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const handleMenuClick = (menuLabel: string, hasDropdown: boolean) => {
-        if (hasDropdown) {
-            setActiveDropdown(activeDropdown === menuLabel ? null : menuLabel);
-        } else {
-            setActiveDropdown(null);
-        }
-    };
-
-    const handleDropdownItemClick = () => {
-        setActiveDropdown(null);
-    };
-
     return (
-        <nav className={styles.nav} ref={dropdownRef}>
+        <nav className={styles.nav}>
             <div className={styles.left}>
                 <Rocket 
                     className={styles.logo} 
@@ -60,14 +36,19 @@ const Nav = () => {
                     onClick={() => window.location.href="/dashboard"} 
                 />
             </div>
+
             <ul className={styles.menu}>
                 {menus.map((menu) => (
-                    <li key={menu.path} className={styles.menuItem}>
+                    <li 
+                        key={menu.path} 
+                        className={styles.menuItem}
+                        onMouseEnter={() => menu.dropdown && setActiveDropdown(menu.label)}
+                        onMouseLeave={() => menu.dropdown && setActiveDropdown(null)}
+                    >
                         <div className={styles.menuWrapper}>
                             <Link
                                 to={menu.path}
                                 className={`${styles.link} ${location.pathname === menu.path ? styles.active : ""}`}
-                                onClick={() => handleMenuClick(menu.label, !!menu.dropdown)}
                             >
                                 {menu.label}
                                 {menu.dropdown && (
@@ -77,7 +58,7 @@ const Nav = () => {
                                     />
                                 )}
                             </Link>
-                            
+
                             {menu.dropdown && (
                                 <div className={`${styles.dropdown} ${activeDropdown === menu.label ? styles.dropdownOpen : ''}`}>
                                     {menu.dropdown.map((item) => (
@@ -85,7 +66,7 @@ const Nav = () => {
                                             key={item.path}
                                             to={item.path}
                                             className={`${styles.dropdownItem} ${location.pathname === item.path ? styles.dropdownItemActive : ''}`}
-                                            onClick={handleDropdownItemClick}
+                                            onClick={() => setActiveDropdown(null)}
                                         >
                                             {item.label}
                                         </Link>

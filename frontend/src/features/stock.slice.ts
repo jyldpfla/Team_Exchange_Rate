@@ -114,11 +114,8 @@ export const loadNLatestStock = createAsyncThunk<
 
     const data = await getStockStrictThenRelaxed(count);
 
-    console.log(data)
-    // ✅ 원본 저장 (반드시 dispatch!)
     dispatch(setRaw(data));
 
-    // ✅ 테이블용으로 가공
     const rows = toStockRows(data, META);
 
     return rows;

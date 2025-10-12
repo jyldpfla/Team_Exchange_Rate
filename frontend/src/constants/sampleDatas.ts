@@ -16,13 +16,6 @@ export const rows: Row[] = [
   { name:"코코아", month:"25-12", unit:"달러/톤", price:7468.00, diff:73.00, rate:0.99, baseDate:"2025.09.10", exchange:"ICE" },
 ];
 
-export const DashboardGraphs:Graph_Option[] = [
-  { value: "usdkrw", label: "USD/KRW", src: "/hong/expimp/expimp_correlation_bar.html" },
-  { value: "eurkrw", label: "EUR/KRW", src: "/charts/eurkrw.html" },
-  { value: "cnykrw", label: "CNY/KRW", src: "/charts/cnykrw.html" },
-  { value: "jpykrw", label: "JPY/KRW", src: "/charts/jpykrw.html" },
-]
-
 export const defaultColumns: TableColumn<Row>[] = [
   col<Row>("name",     "상품명", { render: R.name() }),
   col<Row>("month",    "월물",   { render: R.badge() }),
@@ -52,4 +45,29 @@ export const CommoditiesColumns: TableColumn<Row>[] = [
   numCol<Row>("diff",  "전일비", R.delta()),
   numCol<Row>("rate",  "등락률", R.rate()),
   col<Row>("baseDate", "기준일", { className: cls.date }),
+];
+
+export interface SentimentRow {
+  date: string;
+  value: number;
+  itemName: string;
+  statCode: string;
+  itemCode: string;
+}
+
+export const SentimentColumns: TableColumn<Row>[] = [
+  col<Row>("name", "지표명", { render: R.name() }),
+  col<Row>("exchange", "코드", { className: cls.unit }),
+  numCol<Row>("price", "지수값", R.number()),     // 최신 지수값
+  numCol<Row>("diff", "전일비", R.delta()),        // 전일 대비
+  numCol<Row>("rate", "등락률", R.rate()),        // 등락률 (%)
+  col<Row>("baseDate", "기준일", { className: cls.date }),
+];
+
+export const ExportImportColumns: TableColumn<Row>[] = [
+  col<Row>("name", "지표명", { render: R.name() }),        
+  col<Row>("code", "구분", { render: R.badge() }),        
+  numCol<Row>("price", "지수값", R.number()),             
+  col<Row>("unit", "단위", { className: cls.unit }),     
+  col<Row>("baseDate", "기준일", { className: cls.date }), 
 ];

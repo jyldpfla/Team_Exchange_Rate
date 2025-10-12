@@ -1,7 +1,7 @@
 package com.mbccurrency.service;
 
 import com.mbccurrency.entity.ExchangeRate;
-import com.mbccurrency.repository.PgExchangeRateRepository;
+import com.mbccurrency.repository.jpa.PgExchangeRateRepository;
 import com.mbccurrency.api.dto.ExchangeRateDto;
 import com.mbccurrency.api.dto.SeriesPoint;
 import org.springframework.stereotype.Service;

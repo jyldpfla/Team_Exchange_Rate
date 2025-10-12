@@ -2,8 +2,8 @@
 package com.mbccurrency.service;
 
 import com.mbccurrency.entity.CommoditiesIndex;
-import com.mbccurrency.repository.CommoditiesIndexRepository;
-import com.mbccurrency.repository.PgExchangeRateRepository;
+import com.mbccurrency.repository.jpa.CommoditiesIndexRepository;
+import com.mbccurrency.repository.jpa.PgExchangeRateRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

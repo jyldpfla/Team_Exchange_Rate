@@ -1,5 +1,5 @@
 // src/main/java/com/mbccurrency/repository/MongoInspectRepository.java
-package com.mbccurrency.repository;
+package com.mbccurrency.repository.mongo;
 
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;

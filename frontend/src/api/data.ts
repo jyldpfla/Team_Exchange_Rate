@@ -48,3 +48,39 @@ export async function getStockStrictThenRelaxed(n: number) {
   return relaxed.data; // 없으면 [] 처리
 }
 
+// 전체
+export async function getNewsSentimentAll() {
+    const res = await http.get("/api/mongo/news-sentiment/all");
+    return res.data;
+}
+
+// 특정 날짜
+export async function getNewsSentimentByDate(date: string) {
+    const res = await http.get(`/api/mongo/news-sentiment/date/${date}`);
+    return res.data;
+}
+
+// 기간별
+export async function getNewsSentimentRange(start: string, end: string) {
+    const res = await http.get(`/api/mongo/news-sentiment/range?start=${start}&end=${end}`);
+    return res.data;
+}
+
+// 최신 n건 (전체)
+export async function getNewsSentimentLatest(n: number) {
+    const res = await http.get(`/api/mongo/news-sentiment/latest/${n}`);
+    return res.data;
+}
+
+// 최신 n건 (value, itemName null 제외)
+export async function getNewsSentimentLatestNonNull(n: number) {
+    const res = await http.get(`/api/mongo/news-sentiment/latest/non-null/${n}`);
+    return res.data;
+}
+
+export async function getExportImportPriceIndexLatestN(n: number = 3): Promise<any[]> {
+  const response = await http.get<any>(
+    `/api/mongo/export-import-price-index/latest/non-null/${n}`
+  );
+  return response.data; // 데이터 배열 반환
+}

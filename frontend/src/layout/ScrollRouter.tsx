@@ -27,7 +27,9 @@ export default function ScrollRouter({ children }: { children: React.ReactNode }
 
     useEffect(() => {
         const onWheel = (e: WheelEvent) => {
-            // 페이지 자체 스크롤 대신 라우팅으로 전환
+            const currentIsFullPage = ROUTE_ORDER.includes(pathname as any);
+            if (!currentIsFullPage) return; // ✅ 일반 페이지에서는 스크롤 막지 않음
+
             if (Math.abs(e.deltaY) < SCROLL_THRESHOLD) return;
             e.preventDefault();
             go(e.deltaY > 0 ? 1 : -1);

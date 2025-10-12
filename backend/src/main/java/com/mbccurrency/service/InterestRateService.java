@@ -2,7 +2,8 @@
 package com.mbccurrency.service;
 
 import com.mbccurrency.entity.InterestRate;
-import com.mbccurrency.repository.InterestRateRepository;
+import com.mbccurrency.repository.jpa.InterestRateRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

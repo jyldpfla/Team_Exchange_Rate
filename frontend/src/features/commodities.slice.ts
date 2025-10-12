@@ -94,8 +94,6 @@ export const loadNLatestCommodities = createAsyncThunk<
 
     const data = await getCommoditiesStrictThenRelaxed(count);
 
-    console.log(data)
-    // ✅ 원본 저장 (반드시 dispatch!)
     dispatch(setRaw(data));
 
     // ✅ 테이블용으로 가공

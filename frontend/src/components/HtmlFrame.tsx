@@ -1,16 +1,43 @@
 const BASE_URL = import.meta.env.VITE_IMAGE_SERVER_URL;
 
-export default function HtmlFrame({ className, src }: { className?: string, src: string }) {
-    const fullSrc = src.startsWith("http")
-        ? src
-        : `${BASE_URL}${src}`;
+export default function HtmlFrame({
+    className,
+    src,
+    useBase = true, // 기본값 true
+}: { className?: string; src: string; useBase?: boolean | undefined }) {
+    const fullSrc =
+        useBase
+            ? `${BASE_URL}${src}`
+            : src;
+    if (useBase) {
+        return (
+            <iframe
+                className={className}
+                src={fullSrc}
+                style={{
+                    width: "100%",
+                    aspectRatio: "16 / 9",
+                    border: "none",
+                    borderRadius: "8px",
+                }}
+                sandbox="allow-scripts allow-same-origin"
+            />
+        );
+    }
 
     return (
-        <iframe
-            className={className}
-            src={fullSrc}
-            style={{ width: "100%", height: "100%", border: "none"}}
-            sandbox="allow-scripts allow-same-origin"
-        />
-    );
+            <img
+                src={fullSrc}
+                className={className}
+                style={{
+                    width: "100%",
+                    height: "auto",
+                    borderRadius: "8px",
+                    objectFit: "contain",
+                    display: "block",
+                }}
+                alt="chart"
+            />
+        );
+
 }
