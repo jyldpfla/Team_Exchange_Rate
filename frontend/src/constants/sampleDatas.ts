@@ -1,6 +1,5 @@
 import type { Row, TableColumn } from "../components/CommodityTableCard";
 import { cls, col, numCol, R } from "../lib/data";
-import type { Graph_Option } from "../types/option";
 
 export const rows: Row[] = [
   { name:"옥수수", month:"25-12", unit:"센트/부셀", price:417.00, diff:-2.75, rate:-0.66, baseDate:"2025.09.10", exchange:"CBOT" },

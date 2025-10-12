@@ -1,7 +1,6 @@
 import styles from "../styles/Dashboard.module.scss";
 import Header from "./Header";
 import Select from "../components/Select";
-import { GRAPH_OPTIONS } from "../constants/options";
 import ChartCarousel from "./ChartCarousel";
 import { useState } from "react";
 import type { Graph_Option } from "../types/option";
