@@ -80,7 +80,7 @@ export default function DataBoardPage({ className }: Props) {
       title: "Export Import Index",
       rows: exportImportRows as Row[],
       columns: ExportImportColumns as TableColumn<Row>[],
-      graphSrc: "/hong/expimp/expimp_predictions.html",
+      graphSrc: "/hong/currency/correlation_heatmap_basic.html",
     },
   ];
 
