@@ -1,14 +1,21 @@
 package com.mbccurrency.controller;
 
-import com.mbccurrency.api.dto.ExchangeRateDto;
-import com.mbccurrency.api.dto.SeriesPoint;
-import com.mbccurrency.service.ExchangeService;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.mbccurrency.api.dto.ExchangeRateDto;
+import com.mbccurrency.api.dto.SeriesPoint;
+import com.mbccurrency.entity.ExchangeRate;
+import com.mbccurrency.service.ExchangeService;
 
 @RestController
 @RequestMapping("/api/exchange")
@@ -42,4 +49,26 @@ public class ExchangeController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
         return ResponseEntity.ok(service.getSeries(currency, start, end));
     }
+    
+    
+    @GetMapping("/latest/{n}")
+    public List<ExchangeRateDto> getLatest(@PathVariable int n) {
+        List<ExchangeRate> list = service.getLatest(n);
+        return list.stream()
+                   .map(e -> new ExchangeRateDto(
+                       e.getDate(), e.getUsd(), e.getJpy(), e.getEur(), e.getCny()
+                   ))
+                   .collect(Collectors.toList());
+    }
+
+    @GetMapping("/range")
+    public List<ExchangeRateDto> getRange(@RequestParam("years") int years) {
+        List<ExchangeRate> list = service.getRange(years);
+        return list.stream()
+                   .map(e -> new ExchangeRateDto(
+                       e.getDate(), e.getUsd(), e.getJpy(), e.getEur(), e.getCny()
+                   ))
+                   .collect(Collectors.toList());
+    }
+
 }

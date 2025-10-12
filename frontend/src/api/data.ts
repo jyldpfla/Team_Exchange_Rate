@@ -6,6 +6,11 @@ export async function getExchange(): Promise<any> {
     return response.data
 }
 
+export async function getExchangeRange(years: number) {
+  const res = await http.get(`/api/exchange/range?years=${years}`);
+  return res.data;
+}
+
 export async function getGrains(): Promise<any> {
     const response = await http.get<any>('/api/grains/latest');
 

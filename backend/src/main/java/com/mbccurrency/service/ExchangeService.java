@@ -59,4 +59,14 @@ public class ExchangeService {
         }
         return out;
     }
+    
+    public List<ExchangeRate> getLatest(int n) {
+        return repo.findLatest(n);
+    }
+
+    public List<ExchangeRate> getRange(int years) {
+        LocalDate end = LocalDate.now();
+        LocalDate start = (years == 0) ? LocalDate.of(1970, 1, 1) : end.minusYears(years);
+        return repo.findByDateBetween(start, end);
+    }
 }

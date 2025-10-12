@@ -24,13 +24,14 @@ interface Props {
 export default function DataBoardPage({ className }: Props) {
   const dispatch = useAppDispatch();
 
-  // Redux store selectors
+  // ✅ Redux store selectors
   const grainRows = useAppSelector(selectGrainsRows);
   const commoditiesRows = useAppSelector(selectCommoditiesRows);
   const stockRows = useAppSelector(selectStockRows);
   const sentimentRows = useAppSelector(selectSentimentRows);
   const exportImportRows = useAppSelector(selectExportImportRows);
 
+  // ✅ 데이터 로드
   useEffect(() => {
     dispatch(loadNLatestGrains());
     dispatch(loadNLatestCommodities());
@@ -39,48 +40,42 @@ export default function DataBoardPage({ className }: Props) {
     dispatch(loadNLatestExportImport());
   }, [dispatch]);
 
-  // ✅ 데이터 + 그래프 매핑 (공통 타입으로 맞춤)
+  // ✅ 데이터 섹션들
   const sections: {
     key: string;
     title: string;
     rows: Row[];
     columns: TableColumn<Row>[];
-    graphSrc: string;
   }[] = [
     {
       key: "grains",
       title: "Grains",
       rows: grainRows as Row[],
       columns: grainColumns as TableColumn<Row>[],
-      graphSrc: "/hong/grains/grains.html",
     },
     {
       key: "commodities",
       title: "Commodities",
       rows: commoditiesRows as Row[],
       columns: CommoditiesColumns as TableColumn<Row>[],
-      graphSrc: "/hong/commodities/commodities.html",
     },
     {
       key: "stock",
       title: "Stock",
       rows: stockRows as Row[],
       columns: CommoditiesColumns as TableColumn<Row>[],
-      graphSrc: "/hong/stock/stock.html",
     },
     {
       key: "sentiment",
       title: "Sentiment",
       rows: sentimentRows as unknown as Row[],
       columns: SentimentColumns as TableColumn<Row>[],
-      graphSrc: "/hong/sentiment/sentiment.html",
     },
     {
       key: "exportImport",
       title: "Export Import Index",
       rows: exportImportRows as Row[],
       columns: ExportImportColumns as TableColumn<Row>[],
-      graphSrc: "/hong/currency/correlation_heatmap_basic.html",
     },
   ];
 
@@ -94,17 +89,21 @@ export default function DataBoardPage({ className }: Props) {
             <h2>Datas & Graphs</h2>
           </div>
 
+          {/* ✅ 페이지 맨 위에 고정된 단일 그래프 */}
+          <div className={dataStyles.chartArea}>
+            <div className={dataStyles.fakeChart}>
+              <HtmlFrame src="/hong/currency/correlation_heatmap_basic.html" />
+            </div>
+          </div>
+
+          {/* ✅ 아래쪽 섹션별 데이터 테이블 */}
           {sections.map((section) => (
             <div className={dataStyles.dataRow} key={section.key}>
-              {/* ✅ 타입 안전하게 캐스팅된 props */}
               <CommodityTableCard
                 title={section.title}
                 rows={section.rows}
                 columns={section.columns}
               />
-              <div className={dataStyles.chartBox}>
-                <HtmlFrame src={section.graphSrc} />
-              </div>
             </div>
           ))}
         </div>

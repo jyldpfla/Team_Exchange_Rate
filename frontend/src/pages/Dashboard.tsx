@@ -1,15 +1,11 @@
 import styles from "../styles/Dashboard.module.scss";
 import Header from "../layout/Header";
-import Select from "../components/Select";
-import { CURRENCY_OPTIONS } from "../constants/options";
-import ChartCarousel from "../layout/ChartCarousel";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import CurrencyCalculator from "../components/CurrencyCalc";
 import CommodityTableCard from "../components/CommodityTableCard";
 import { useAppSelector } from "../app/hook";
 import { selectExchangeLoading, selectLatestExchange } from "../features/exchange.slice"
-import HtmlFrame from "../components/HtmlFrame";
-import { DashboardGraphs } from "../constants/graphDatas";
+import ExchangeChart from "../layout/ExchangeChart";
 
 interface Props {
     className?: string;
@@ -17,25 +13,8 @@ interface Props {
 
 export default function DashboardPage(props: Props) {
     const { className } = props;
-    const [selectedOption, setSelectedOption] = useState(CURRENCY_OPTIONS[0].value);
-    const [isPaused, setIsPaused] = useState(false);
     const latest = useAppSelector(selectLatestExchange);
     const loading = useAppSelector(selectExchangeLoading);
-
-
-    const getSelectedIndex = () => {
-        return CURRENCY_OPTIONS.findIndex(opt => opt.value === selectedOption);
-    };
-
-    const handleSelectChange = (value: string) => {
-        setSelectedOption(value);
-        setIsPaused(true);
-
-        // 10초 후 다시 자동 회전
-        setTimeout(() => {
-            setIsPaused(false);
-        }, 10000);
-    };
 
     const headers = [{ key: "currency", header: "통화" }, { key: "exchange_rate", header: "현재 환율", className: "num" }];
     const rows = useMemo(() => {
@@ -61,11 +40,11 @@ export default function DashboardPage(props: Props) {
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>
                             <h2>Statistics</h2>
-                            <Select
+                            {/* <Select
                                 options={CURRENCY_OPTIONS}
                                 value={selectedOption}
                                 onChange={handleSelectChange}
-                            />
+                            /> */}
                         </div>
 
                         {/* 탭 */}
@@ -73,13 +52,10 @@ export default function DashboardPage(props: Props) {
 
                         {/* 차트 영역(placeholder) */}
                         <div className={styles.chartArea}>
-                            <ChartCarousel key={isPaused ? selectedOption : 'auto'} intervalMs={isPaused ? 0 : 3000} initialIndex={isPaused ? getSelectedIndex() : 0}>
-                                {DashboardGraphs.map((option, index) => (
-                                    <div key={index} className={styles.fakeChart}>
-                                        <HtmlFrame src={option.src} />
-                                    </div>
-                                ))}
-                            </ChartCarousel>
+                            <div className={styles.chartWrapper}>
+                                <ExchangeChart />
+                            </div>
+                            
                         </div>
                     </div>
                 </section>
