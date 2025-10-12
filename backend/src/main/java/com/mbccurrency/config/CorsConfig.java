@@ -13,8 +13,11 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // 모든 경로
-                        .allowedOrigins("http://localhost:5173") // 프론트 주소
+                registry.addMapping("/**")
+                        .allowedOrigins(
+                            "http://localhost:5173",           // 로컬 개발용
+                            "http://152.67.200.168:8006"      // 🔥 서버 배포용 (프론트 주소)
+                        )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
