@@ -16,7 +16,7 @@ public class CorsConfig {
                 registry.addMapping("/**")
                         .allowedOrigins(
                             "http://localhost:5173",           // 로컬 개발용
-                            "http://152.67.200.168:8006"      // 🔥 서버 배포용 (프론트 주소)
+                            "http://140.245.76.205:8006"      // 🔥 서버 배포용 (프론트 주소)
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                         .allowedHeaders("*")
