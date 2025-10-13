@@ -36,7 +36,7 @@ export const R = {
       return (
         <span className={`rate ${dir}`} aria-label={`등락률 ${percentFmt(value)}`}>
           <i aria-hidden="true" />
-          <span>{percentFmt(Math.abs(value))}</span>
+          <span>{percentFmt(value)}</span>
         </span>
       );
     },
