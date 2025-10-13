@@ -9,17 +9,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    environment:
-      SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mbc_db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/mbc_mongo
     ports:
-      - "8081:8080"      # ✅ 호스트포트 8081로 변경 (Jenkins와 충돌 방지)
-    depends_on:
-      - postgres
-      - mongo
+      - "8081:8080"      
     networks:
       - appnet
 
