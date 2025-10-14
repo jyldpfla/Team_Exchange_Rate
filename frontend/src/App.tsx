@@ -16,6 +16,7 @@ import { connectMDb, connectPDb, getHealth } from './api/health'
 import { useAppDispatch } from './app/hook'
 import { loadLatestExchange } from './features/exchange.slice'
 import { Gold, IEPriceIndex, InterestRate, NewsSentiment, Oil, SAndP500 } from './pages/VisDetail'
+import NotFound from './pages/NotFound'
 
 function App() {
   const location = useLocation();
@@ -59,14 +60,15 @@ function App() {
                   <Route path="/" element={<Main />} />
                   <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/databoard" element={<DataBoardPage />} />
-                  <Route path="/visualizationboard" element={<VisualizationBoardPage />} />
+                  {/* <Route path="/visualizationboard" element={<VisualizationBoardPage />} /> */}
                   <Route path="/visualizationboard/S&P500" element={<SAndP500 />} />
                   <Route path="/visualizationboard/Oil" element={<Oil />} />
                   <Route path="/visualizationboard/interestrate" element={<InterestRate />} />
                   <Route path="/visualizationboard/ieprice" element={<IEPriceIndex />} />
                   <Route path="/visualizationboard/gold" element={<Gold />} />
                   <Route path="/visualizationboard/newssentiment" element={<NewsSentiment />} />
-                  <Route path="/insightsboard" element={<InsightBoardPage />} />
+                  {/* <Route path="/insightsboard" element={<InsightBoardPage />} /> */}
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </div>
             </CSSTransition>

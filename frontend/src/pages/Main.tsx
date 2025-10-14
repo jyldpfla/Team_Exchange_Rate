@@ -16,7 +16,7 @@ export default function Main() {
                             <Link to="/databoard">Datas</Link>
                         </button>
                         <button className={styles.navButton}>
-                            <Link to="/visualizationboard">Visualization</Link>
+                            <Link to="/visualizationboard/S&P500">Visualization</Link>
                         </button>
                         {/* <button className={styles.navButton}>
                             <Link to="/insightsboard">Insight</Link>
