@@ -8,7 +8,6 @@ import { selectExchangeLoading, selectLatestExchange } from "../features/exchang
 import ExchangeChart from "../layout/ExchangeChart";
 import ChartCarousel from "../layout/ChartCarousel";
 import HtmlFrame from "../components/HtmlFrame";
-import ToggleGroup from "../layout/ToggleGroup";
 import Select from "../components/Select";
 import { DASHBOARD_OPTIONS } from "../constants/options";
 
