@@ -10,6 +10,10 @@ const Nav = () => {
 
     const menus = [
         { 
+            label: "Dashboard", 
+            path: "/dashboard",
+        },
+        { 
             label: "DataSet", 
             path: "/databoard",
         },

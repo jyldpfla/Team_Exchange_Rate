@@ -1,11 +1,16 @@
 import styles from "../styles/Dashboard.module.scss";
 import Header from "../layout/Header";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import CurrencyCalculator from "../components/CurrencyCalc";
 import CommodityTableCard from "../components/CommodityTableCard";
 import { useAppSelector } from "../app/hook";
 import { selectExchangeLoading, selectLatestExchange } from "../features/exchange.slice"
 import ExchangeChart from "../layout/ExchangeChart";
+import ChartCarousel from "../layout/ChartCarousel";
+import HtmlFrame from "../components/HtmlFrame";
+import ToggleGroup from "../layout/ToggleGroup";
+import Select from "../components/Select";
+import { DASHBOARD_OPTIONS } from "../constants/options";
 
 interface Props {
     className?: string;
@@ -15,6 +20,24 @@ export default function DashboardPage(props: Props) {
     const { className } = props;
     const latest = useAppSelector(selectLatestExchange);
     const loading = useAppSelector(selectExchangeLoading);
+    const [selectedOption, setSelectedOption] = useState(DASHBOARD_OPTIONS[0].value);
+    const [isPaused, setIsPaused] = useState(false);
+
+    const getSelectedIndex = () => {
+            return DASHBOARD_OPTIONS.findIndex(opt => opt.value === selectedOption);
+        };
+    
+
+    const handleSelectChange = (value: string) => {
+        setSelectedOption(value);
+        setIsPaused(true);
+
+        // 10초 후 다시 자동 회전
+        setTimeout(() => {
+            setIsPaused(false);
+        }, 10000);
+    };
+
 
     const headers = [{ key: "currency", header: "통화" }, { key: "exchange_rate", header: "현재 환율", className: "num" }];
     const rows = useMemo(() => {
@@ -40,21 +63,24 @@ export default function DashboardPage(props: Props) {
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>
                             <h2>Statistics</h2>
-                            {/* <Select
-                                options={CURRENCY_OPTIONS}
+                            <Select
+                                options={DASHBOARD_OPTIONS}
                                 value={selectedOption}
                                 onChange={handleSelectChange}
-                            /> */}
+                            />
                         </div>
-
-                        {/* 탭 */}
-                        {/* <ToggleGroup /> */}
 
                         {/* 차트 영역(placeholder) */}
                         <div className={styles.chartArea}>
-                            <div className={styles.chartWrapper}>
-                                <ExchangeChart />
-                            </div>
+                            <ChartCarousel intervalMs={8000} initialIndex={isPaused ? getSelectedIndex() : 0} loop key={isPaused ? selectedOption : 'auto'}>
+                                <div className={styles.chartWrapper}>
+                                    <ExchangeChart />
+                                </div>
+                                <div className={styles.chartWrapper}>
+                                    <HtmlFrame src={"/hong/currency/allcurrencies_predictions.html"} />
+                                </div>
+                            </ChartCarousel>
+
                         </div>
                     </div>
                 </section>
