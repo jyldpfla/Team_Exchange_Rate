@@ -47,37 +47,37 @@ export default function DataBoardPage({ className }: Props) {
     rows: Row[];
     columns: TableColumn<Row>[];
   }[] = [
-    {
-      key: "grains",
-      title: "Grains",
-      rows: grainRows as Row[],
-      columns: grainColumns as TableColumn<Row>[],
-    },
-    {
-      key: "commodities",
-      title: "Commodities",
-      rows: commoditiesRows as Row[],
-      columns: CommoditiesColumns as TableColumn<Row>[],
-    },
-    {
-      key: "stock",
-      title: "Stock",
-      rows: stockRows as Row[],
-      columns: CommoditiesColumns as TableColumn<Row>[],
-    },
-    {
-      key: "sentiment",
-      title: "Sentiment",
-      rows: sentimentRows as unknown as Row[],
-      columns: SentimentColumns as TableColumn<Row>[],
-    },
-    {
-      key: "exportImport",
-      title: "Export Import Index",
-      rows: exportImportRows as Row[],
-      columns: ExportImportColumns as TableColumn<Row>[],
-    },
-  ];
+      {
+        key: "grains",
+        title: "Grains",
+        rows: grainRows as Row[],
+        columns: grainColumns as TableColumn<Row>[],
+      },
+      {
+        key: "commodities",
+        title: "Commodities",
+        rows: commoditiesRows as Row[],
+        columns: CommoditiesColumns as TableColumn<Row>[],
+      },
+      {
+        key: "stock",
+        title: "Stock",
+        rows: stockRows as Row[],
+        columns: CommoditiesColumns as TableColumn<Row>[],
+      },
+      {
+        key: "sentiment",
+        title: "Sentiment",
+        rows: sentimentRows as unknown as Row[],
+        columns: SentimentColumns as TableColumn<Row>[],
+      },
+      {
+        key: "exportImport",
+        title: "Export Import Index",
+        rows: exportImportRows as Row[],
+        columns: ExportImportColumns as TableColumn<Row>[],
+      },
+    ];
 
   return (
     <div className={`${styles.page} ${className}`}>
@@ -89,23 +89,24 @@ export default function DataBoardPage({ className }: Props) {
             <h2>Datas & Graphs</h2>
           </div>
 
-          {/* ✅ 페이지 맨 위에 고정된 단일 그래프 */}
           <div className={dataStyles.chartArea}>
             <div className={dataStyles.fakeChart}>
-              <HtmlFrame src="/hong/currency/correlation_heatmap_basic.html" />
+              <HtmlFrame className="heatmap" src="/hong/currency/correlation_heatmap_basic.html" />
             </div>
           </div>
 
-          {/* ✅ 아래쪽 섹션별 데이터 테이블 */}
-          {sections.map((section) => (
-            <div className={dataStyles.dataRow} key={section.key}>
-              <CommodityTableCard
-                title={section.title}
-                rows={section.rows}
-                columns={section.columns}
-              />
-            </div>
-          ))}
+
+          <div className={dataStyles.dataGrid}>
+            {sections.map((section) => (
+              <div className={dataStyles.dataRow} key={section.key}>
+                <CommodityTableCard
+                  title={section.title}
+                  rows={section.rows}
+                  columns={section.columns}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </main>
     </div>

@@ -105,7 +105,7 @@ export default function ExchangeChart() {
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={filteredData}
           onMouseDown={handleMouseDown}

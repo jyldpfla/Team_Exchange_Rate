@@ -80,7 +80,6 @@ export async function getNewsSentimentLatest(n: number) {
 // 최신 n건 (value, itemName null 제외)
 export async function getNewsSentimentLatestNonNull(n: number) {
     const res = await http.get(`/api/mongo/news-sentiment/latest/non-null/${n}`);
-    console.log(res.data)
     return res.data;
 }
 
@@ -88,6 +87,5 @@ export async function getExportImportPriceIndexLatestN(n: number = 3): Promise<a
   const response = await http.get<any>(
     `/api/mongo/export-import-price-index/latest/non-null/${n}`
   );
-  console.log(response.data)
   return response.data; // 데이터 배열 반환
 }

@@ -39,7 +39,6 @@ const CommodityTableCard = <T extends Record<string, any> = Row>({
   className = ""
 }: Props<T>) => {
 
-  console.log(rows)
   
   const renderCellContent = (column: TableColumn<T>, row: T, index: number) => {
     const value = typeof column.key === 'string' ? row[column.key] : row[column.key as keyof T];

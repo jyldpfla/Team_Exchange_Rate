@@ -5,18 +5,23 @@ import ChartCarousel from "./ChartCarousel";
 import { useState } from "react";
 import type { Graph_Option } from "../types/option";
 import HtmlFrame from "../components/HtmlFrame";
+import InsightCard, { type InsightItem } from "./InsightCard";
+
+export interface InsightsDatas {
+    menus: string[],
+    contents: InsightItem[][]
+}
 
 interface Props {
     className?: string;
     graph: Graph_Option[];
-    datas: Record<string, string[]>;
+    datas: InsightsDatas
 }
 
 export default function VisualizationDetailPage(props: Props) {
     const { className, graph, datas } = props;
     const [selectedOption, setSelectedOption] = useState(graph[0].value);
     const [isPaused, setIsPaused] = useState(false);
-    const [activeTab, setActiveTab] = useState<string>('Comment');
 
     const getSelectedIndex = () => {
         return graph.findIndex(opt => opt.value === selectedOption);
@@ -70,11 +75,15 @@ export default function VisualizationDetailPage(props: Props) {
                 <aside className={styles.right}>
                     {/* 우측: 컨트롤/리스트 패널 */}
                     <div className={styles.card}>
-                        <div className={styles.cardHeader}>
+                        <InsightCard 
+                            tabMenus={datas.menus}
+                            menuContents={datas.contents}
+                        />
+                        {/* <div className={styles.cardHeader}>
                             <h3>Insight</h3>
-                        </div>
+                        </div> */}
 
-                        <div className={styles.cardBody}>
+                        {/* <div className={styles.cardBody}>
                             <div className={styles.folderTabs}>
                                 {Object.keys(datas).map(tab => (
                                     <button
@@ -95,7 +104,7 @@ export default function VisualizationDetailPage(props: Props) {
                                 </ul>
                             </div>
 
-                        </div>
+                        </div> */}
                     </div>
                 </aside>
             </main>

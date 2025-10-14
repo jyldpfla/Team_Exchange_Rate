@@ -109,10 +109,8 @@ export const loadNLatestNonNullSentiment = createAsyncThunk<
     const data = await getNewsSentimentLatestNonNull(count);
     const rows = toSentimentRows(data, META);
 
-    console.log("✅ data", data);
-    console.log("✅ rows", rows);
 
-    dispatch(setRaw(data)); // ✅ 이제 store에 반영됨
+    dispatch(setRaw(data)); 
     return rows;
   } catch (e: any) {
     return rejectWithValue(e?.message ?? "Failed to fetch non-null sentiment data");

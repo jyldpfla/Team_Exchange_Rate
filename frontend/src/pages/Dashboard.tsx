@@ -55,7 +55,6 @@ export default function DashboardPage(props: Props) {
                             <div className={styles.chartWrapper}>
                                 <ExchangeChart />
                             </div>
-                            
                         </div>
                     </div>
                 </section>
@@ -64,7 +63,7 @@ export default function DashboardPage(props: Props) {
                     {/* 우측: 컨트롤/리스트 패널 */}
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>
-                            <h3>FX rate calculation</h3>
+                            <h3>환율계산기</h3>
                         </div>
 
                         <div className={styles.controls}>

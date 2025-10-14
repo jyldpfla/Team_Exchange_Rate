@@ -8,7 +8,7 @@ export default function Main() {
                 <div className={styles.content}>
                     <header className={styles.header}>
                         <h1 className={styles.title}>Economic Freedom</h1>
-                        <p className={styles.subtitle}>간단한 설명이 삽입될 예정입니다.</p>
+                        <p className={styles.subtitle}>데이터로 경제의 흐름을 읽어냅니다</p>
                     </header>
 
                     <nav className={styles.navigation}>
