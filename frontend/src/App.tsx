@@ -15,6 +15,7 @@ import { useAppDispatch } from './app/hook'
 import { loadLatestExchange } from './features/exchange.slice'
 import { Gold, IEPriceIndex, InterestRate, NewsSentiment, Oil, SAndP500 } from './pages/VisDetail'
 import NotFound from './pages/NotFound'
+import VisualizationBoardPage from './pages/VisualizationBoard'
 
 function App() {
   const location = useLocation();
@@ -58,7 +59,7 @@ function App() {
                   <Route path="/" element={<Main />} />
                   <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/databoard" element={<DataBoardPage />} />
-                  {/* <Route path="/visualizationboard" element={<VisualizationBoardPage />} /> */}
+                  <Route path="/visualizationboard" element={<VisualizationBoardPage />} />
                   <Route path="/visualizationboard/S&P500" element={<SAndP500 />} />
                   <Route path="/visualizationboard/Oil" element={<Oil />} />
                   <Route path="/visualizationboard/interestrate" element={<InterestRate />} />

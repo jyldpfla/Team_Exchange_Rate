@@ -9,7 +9,9 @@ type Props = {
     onIndexChange?: (index: number) => void;
     className?: string;
     style?: React.CSSProperties;
+    paused?: boolean; // ✅ 추가
 };
+
 
 const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(n, max));
 
@@ -21,6 +23,7 @@ export default function ChartCarousel({
     onIndexChange,
     className,
     style,
+    paused = false
 }: Props) {
     const slides = useMemo(() => React.Children.toArray(children), [children]);
     const count = slides.length;
@@ -43,16 +46,16 @@ export default function ChartCarousel({
         });
     };
 
-    // 항상 자동 순환
     useEffect(() => {
-        if (!intervalMs || count <= 1) return;
+        if (!intervalMs || count <= 1 || paused) return; 
 
         const timer = window.setInterval(() => {
-            goto(prev => prev + 1);
+            goto((prev) => prev + 1);
         }, intervalMs);
 
         return () => clearInterval(timer);
-    }, [intervalMs, count, loop]);
+    }, [intervalMs, count, loop, paused]);
+
 
     return (
         <div

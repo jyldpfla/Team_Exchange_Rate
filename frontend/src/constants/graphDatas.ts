@@ -73,7 +73,7 @@ export const InterestRateDatas: InsightsDatas = {
 };
 
 export const GoldGraphs: Graph_Option[] = [
-    { value: "gold_LSTM", label: "gold_LSTM", src: "/gold_LSTM.png", useBase: false },
+    { value: "gold_LSTM", label: "gold_LSTM", src: "/kim/gold/predictions_timeline.html" },
     { value: "gold_timeseries", label: "gold_timeseries", src: "/gold_timeseries_visualization.png", useBase: false }
 ];
 

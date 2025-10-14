@@ -23,18 +23,13 @@ export default function DashboardPage(props: Props) {
     const [isPaused, setIsPaused] = useState(false);
 
     const getSelectedIndex = () => {
-            return DASHBOARD_OPTIONS.findIndex(opt => opt.value === selectedOption);
-        };
-    
+        return DASHBOARD_OPTIONS.findIndex(opt => opt.value === selectedOption);
+    };
+
 
     const handleSelectChange = (value: string) => {
         setSelectedOption(value);
         setIsPaused(true);
-
-        // 10초 후 다시 자동 회전
-        setTimeout(() => {
-            setIsPaused(false);
-        }, 10000);
     };
 
 
@@ -71,7 +66,13 @@ export default function DashboardPage(props: Props) {
 
                         {/* 차트 영역(placeholder) */}
                         <div className={styles.chartArea}>
-                            <ChartCarousel intervalMs={8000} initialIndex={isPaused ? getSelectedIndex() : 0} loop key={isPaused ? selectedOption : 'auto'}>
+                            <ChartCarousel
+                                intervalMs={8000}
+                                initialIndex={isPaused ? getSelectedIndex() : 0}
+                                loop
+                                paused={isPaused} // ✅ 추가
+                                key={isPaused ? selectedOption : "auto"}
+                            >
                                 <div className={styles.chartWrapper}>
                                     <ExchangeChart />
                                 </div>
@@ -79,6 +80,7 @@ export default function DashboardPage(props: Props) {
                                     <HtmlFrame src={"/hong/currency/allcurrencies_predictions.html"} />
                                 </div>
                             </ChartCarousel>
+
 
                         </div>
                     </div>

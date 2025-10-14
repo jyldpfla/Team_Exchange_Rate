@@ -19,7 +19,7 @@ const Nav = () => {
         },
         { 
             label: "Visualization", 
-            path: "/visualizationboard/S&P500",
+            path: "/visualizationboard",
             dropdown: [
                 { label: "S&P500", path: "/visualizationboard/S&P500" },
                 { label: "Oil", path: "/visualizationboard/Oil" },
