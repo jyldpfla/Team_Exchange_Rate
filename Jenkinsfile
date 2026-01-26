@@ -36,7 +36,12 @@ pipeline {
     }
 
     stage('Deploy to STAGING') {
-      when { branch 'develop' }
+      when { 
+        anyOf {
+          branch 'develop'
+          branch 'main'
+        }
+       }
       steps {
         echo '🚀 Deploying to STAGING environment...'
         sh '''
